@@ -1,5 +1,6 @@
 package edu.client.controller;
 
+import edu.client.Application;
 import edu.client.entity.BookEntity;
 import edu.client.utils.HTTPUtils;
 import javafx.fxml.FXML;
@@ -20,8 +21,7 @@ public class EditBookController {
     private TextField yearLabel;
 
     public void addBook() {
-        BookEntity book = new BookEntity();
-//        http.post();
+      Application.showPersonEditDialog();
     }
 
     public void closeModal() {

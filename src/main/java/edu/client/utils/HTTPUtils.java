@@ -14,7 +14,6 @@ public class HTTPUtils {
     Gson gson = builder.create();
 
     public BaseResponse post(String url, BookEntity book) throws IOException {
-        System.out.println(url);
         RequestBody body = RequestBody.create(
                 gson.toJson(book),
                 MediaType.get("application/json; charset=utf-8"));
@@ -34,9 +33,7 @@ public class HTTPUtils {
                 .url(url + args)
                 .build();
         try (Response response = client.newCall(req).execute()) {
-            BookListResponse books = new BookListResponse();
-            books = gson.fromJson(response.body().string(), BookListResponse.class);
-            return books;
+            return gson.fromJson(response.body().string(), BookListResponse.class);
         }
     }
 

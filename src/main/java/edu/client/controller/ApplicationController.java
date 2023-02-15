@@ -35,7 +35,13 @@ public class ApplicationController {
         BookListResponse books = http.get("http://localhost:8080/api/v1/book/", "all");
         booksData.addAll(books.getData());
 
+        bookId.setCellFactory(new PropertyValueFactory<BookEntity, Long>("book_id"));
         bookName.setCellFactory(new PropertyValueFactory<BookEntity, String>("title"));
+        bookAuthor.setCellFactory(new PropertyValueFactory<BookEntity, String>("author"));
+        bookPublisher.setCellFactory(new PropertyValueFactory<BookEntity, String>("publisher"));
+        bookYear.setCellFactory(new PropertyValueFactory<BookEntity, String>("yearPub"));
+        bookKind.setCellFactory(new PropertyValueFactory<BookEntity, String>("kind"));
+        tableBooks.setItems(booksData);
     }
 
     @FXML
