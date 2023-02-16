@@ -17,7 +17,7 @@ public class Application extends javafx.application.Application {
         stage.show();
     }
 
-    public static boolean showPersonEditDialog() {
+    public static void showBookEditDialog() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Application.class.getResource("view/editBook.fxml"));
@@ -28,10 +28,8 @@ public class Application extends javafx.application.Application {
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
             dialogStage.showAndWait();
-            return true;
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 

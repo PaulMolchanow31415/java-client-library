@@ -9,33 +9,32 @@ import okhttp3.*;
 import java.io.IOException;
 
 public class HTTPUtils {
+
     OkHttpClient client = new OkHttpClient();
-    GsonBuilder builder = new GsonBuilder();
-    Gson gson = builder.create();
+    /*GsonBuilder builder = new GsonBuilder();
+    Gson gson = builder.create();*/
 
-    public BaseResponse post(String url, BookEntity book) throws IOException {
-        RequestBody body = RequestBody.create(
-                gson.toJson(book),
-                MediaType.get("application/json; charset=utf-8"));
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
+    public String post(String url, String json) throws IOException {
+        RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+        Request request = new Request.Builder().url(url).post(body).build();
         try (Response response = client.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            return gson.fromJson(response.body().string(), BaseResponse.class);
+            return response.body().string();
         }
     }
 
-    public BookListResponse get(String url, String args) throws IOException {
-        Request req = new Request
-                .Builder()
-                .url(url + args)
-                .build();
-        try (Response response = client.newCall(req).execute()) {
-            return gson.fromJson(response.body().string(), BookListResponse.class);
+    public String get(String url, String args) throws IOException {
+        Request request = new Request.Builder().url(url + args).build();
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
         }
     }
 
+    public String put(String url, String json) throws IOException {
+        RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+        Request request = new Request.Builder().url(url).put(body).build();
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
+        }
+    }
 
 }

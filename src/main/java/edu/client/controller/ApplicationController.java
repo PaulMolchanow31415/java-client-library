@@ -9,52 +9,55 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ApplicationController {
     public static ObservableList<BookEntity> booksData = FXCollections.observableArrayList();
     HTTPUtils http = new HTTPUtils();
-
     @FXML
     private TableView<BookEntity> tableBooks;
+
     @FXML
-    private TableColumn<BookEntity, String> bookName;
+    private TableColumn<BookEntity, String> bookNameColumn;
     @FXML
-    private TableColumn<BookEntity, String> bookAuthor;
+    private TableColumn<BookEntity, String> bookAuthorColumn;
     @FXML
-    private TableColumn<BookEntity, String> bookPublisher;
+    private TableColumn<BookEntity, String> bookPublisherColumn;
     @FXML
-    private TableColumn<BookEntity, String> bookYear;
+    private TableColumn<BookEntity, String> bookYearColumn;
     @FXML
-    private TableColumn<BookEntity, String> bookKind;
+    private TableColumn<BookEntity, String> bookKindColumn;
     @FXML
-    private TableColumn<BookEntity, Long> bookId;
+    private TableColumn<BookEntity, Long> bookIdColumn;
 
     @FXML
     private void initialize() throws Exception {
         BookListResponse books = http.get("http://localhost:8080/api/v1/book/", "all");
         booksData.addAll(books.getData());
+        System.out.println(booksData);
 
-        bookId.setCellFactory(new PropertyValueFactory<BookEntity, Long>("book_id"));
-        bookName.setCellFactory(new PropertyValueFactory<BookEntity, String>("title"));
-        bookAuthor.setCellFactory(new PropertyValueFactory<BookEntity, String>("author"));
-        bookPublisher.setCellFactory(new PropertyValueFactory<BookEntity, String>("publisher"));
-        bookYear.setCellFactory(new PropertyValueFactory<BookEntity, String>("yearPub"));
-        bookKind.setCellFactory(new PropertyValueFactory<BookEntity, String>("kind"));
-        tableBooks.setItems(booksData);
+//        bookId.setCellFactory(new PropertyValueFactory<BookEntity, Long>("book_id"));
+//        bookName.setCellFactory(new PropertyValueFactory<BookEntity, String>("title"));
+//        bookAuthor.setCellFactory(new PropertyValueFactory<BookEntity, String>("author"));
+//        bookPublisher.setCellFactory(new PropertyValueFactory<BookEntity, String>("publisher"));
+//        bookYear.setCellFactory(new PropertyValueFactory<BookEntity, String>("yearPub"));
+//        bookKind.setCellFactory(new PropertyValueFactory<BookEntity, String>("kind"));
+//        tableBooks.setItems(booksData);
     }
 
     @FXML
     public void addBook() {
-        Application.showPersonEditDialog();
+        Application.showBookEditDialog();
     }
 
+    @FXML
     public void editBook() {
     }
 
-    public void doubleBook() {
+    @FXML
+    public void duplicateBook() {
     }
 
+    @FXML
     public void deleteBook() {
     }
 }

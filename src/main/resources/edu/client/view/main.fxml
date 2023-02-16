@@ -18,12 +18,12 @@
       </Label>
       <TableView fx:id="tableBooks" layoutY="60.0" prefHeight="268.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
         <columns>
-            <TableColumn fx:id="bookName" prefWidth="106.0" text="Название" />
-            <TableColumn fx:id="bookAuthor" prefWidth="44.0" text="Автор" />
-            <TableColumn fx:id="bookPublisher" prefWidth="75.0" text="Издательство" />
-            <TableColumn fx:id="bookYear" prefWidth="75.0" text="Год выпуска" />
-            <TableColumn fx:id="bookKind" prefWidth="75.0" text="Жанр" />
-            <TableColumn fx:id="bookId" text="ID" prefWidth="75.0" visible="false" />
+            <TableColumn fx:id="bookNameColumn" prefWidth="106.0" text="Название" />
+            <TableColumn fx:id="bookAuthorColumn" prefWidth="44.0" text="Автор" />
+            <TableColumn fx:id="bookPublisherColumn" prefWidth="75.0" text="Издательство" />
+            <TableColumn fx:id="bookYearColumn" prefWidth="75.0" text="Год выпуска" />
+            <TableColumn fx:id="bookKindColumn" prefWidth="75.0" text="Жанр" />
+            <TableColumn fx:id="bookIdColumn" text="ID" prefWidth="75.0" visible="false" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -47,7 +47,7 @@
                   <Insets bottom="6.0" left="16.0" right="16.0" top="6.0" />
                </padding>
             </Button>
-            <Button layoutX="307.0" layoutY="10.0" mnemonicParsing="false" onAction="#doubleBook" text="Дублировать">
+            <Button layoutX="307.0" layoutY="10.0" mnemonicParsing="false" onAction="#duplicateBook" text="Дублировать">
                <font>
                   <Font size="14.0" />
                </font>
