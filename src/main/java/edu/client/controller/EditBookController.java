@@ -6,8 +6,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import static edu.client.controller.AppController.booksData;
-import static edu.client.controller.AppController.updateBook;
+import java.io.IOException;
+
+import static edu.client.controller.AppController.*;
 
 public class EditBookController {
   @FXML
@@ -30,7 +31,7 @@ public class EditBookController {
     this.editBookStage = dialogStage;
   }
 
-  private boolean isOkClicked() {
+  public boolean isOkClicked() {
     return okClicked;
   }
 
@@ -46,7 +47,7 @@ public class EditBookController {
   }
 
   @FXML
-  public void handleOk() {
+  public void saveBook() throws IOException {
     if (isInputValid()) {
       book.setTitle(nameField.getText());
       book.setAuthor(authorField.getText());
@@ -58,6 +59,8 @@ public class EditBookController {
       editBookStage.close();
       booksData.set(bookId, book);
       updateBook(book);
+
+      http.post(API_PATH + "add", gson.toJson(book));
     }
   }
 
@@ -72,7 +75,7 @@ public class EditBookController {
     String author = authorField.getText();
     String publisher = publisherField.getText();
     String kind = nameField.getText();
-    String yearPub = nameField.getText();
+    String yearPub = yearField.getText();
 
     if (title == null || title.length() == 0) errorMessage.append("Не обнаружено название книги\n");
     if (author == null || author.length() == 0) errorMessage.append("Не обнаружен автор книги\n");

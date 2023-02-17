@@ -2,6 +2,7 @@ package edu.client.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import edu.client.App;
 import edu.client.entity.BookEntity;
@@ -24,7 +25,6 @@ public class AppController {
 
     @FXML
     private TableView<BookEntity> tableBooks;
-
     @FXML
     private TableColumn<BookEntity, String> bookNameColumn;
     @FXML
@@ -39,44 +39,59 @@ public class AppController {
     private TableColumn<BookEntity, Long> bookIdColumn;
 
     @FXML
-    private void initialize() {
+    private void initialize() throws IOException {
         getData();
         updateTable();
     }
 
-    public void updateTable() {
-        bookNameColumn.setCellFactory(new PropertyValueFactory<BookEntity, String>("title"));
-        bookAuthorColumn.setCellFactory(new PropertyValueFactory<BookEntity, String>("author"));
-        bookPublisherColumn.setCellFactory(new PropertyValueFactory<BookEntity, String>("publisher"));
-        bookYearColumn.setCellFactory(new PropertyValueFactory<BookEntity, String>("year"));
-        bookKindColumn.setCellFactory(new PropertyValueFactory<BookEntity, String>("kind"));
+    public static void getData() throws IOException {
+        String response = http.get(API_PATH, "all");
+        //System.out.println(res);
+        JsonObject base = gson.fromJson(response, JsonObject.class);
+        JsonArray dataArr = base.getAsJsonArray("data");
+        for (JsonElement element : dataArr) {
+            BookEntity newBook = gson.fromJson(element.toString(), BookEntity.class);
+            booksData.add(newBook);
+        }
+    }
+
+    private void updateTable() {
+        bookNameColumn.setCellValueFactory(new PropertyValueFactory<BookEntity, String>("title"));
+        bookAuthorColumn.setCellValueFactory(new PropertyValueFactory<BookEntity, String>("author"));
+        bookPublisherColumn.setCellValueFactory(new PropertyValueFactory<BookEntity, String>("publisher"));
+        bookYearColumn.setCellValueFactory(new PropertyValueFactory<BookEntity, String>("yearPub"));
+        bookKindColumn.setCellValueFactory(new PropertyValueFactory<BookEntity, String>("kind"));
         tableBooks.setItems(booksData);
     }
 
-    @FXML
-    public void handleAddBook() {
-        BookEntity tempBook = new BookEntity();
-        booksData.add(tempBook);
-        App.showBookEditDialog(tempBook, booksData.size() - 1);
-        addBook(tempBook);
+    public static void updateBook(BookEntity book) throws IOException {
+        http.put(API_PATH + "update", gson.toJson(book));
     }
 
     @FXML
-    public void handleDeleteBook() {
+    public void handleAddBook() throws IOException {
+        BookEntity tempBook = new BookEntity();
+        booksData.add(tempBook);
+        App.showBookEditDialog(tempBook, booksData.size() - 1);
+        handleAddBook(tempBook);
+    }
+
+    @FXML
+    public void handleDeleteBook() throws IOException {
         BookEntity selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
+            http.delete(API_PATH, selectedBook.getId());
             booksData.remove(selectedBook);
-            //AppController.saveDB(booksData);
         } else {
             showNothingIsSelectedAlert();
         }
     }
 
     @FXML
-    public void handleDuplicateBook() {
+    public void handleDuplicateBook() throws IOException {
         BookEntity selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
-            addBook(selectedBook);
+            handleAddBook(selectedBook);
             booksData.add(booksData.indexOf(selectedBook) + 1, selectedBook);
         } else {
             showNothingIsSelectedAlert();
@@ -93,25 +108,10 @@ public class AppController {
         }
     }
 
-    public static void getData() throws IOException {
-        String res = http.get(API_PATH, "all");
-        System.out.println(res);
-        JsonObject base = gson.fromJson(res, JsonObject.class);
-        JsonArray dataArr = base.getAsJsonArray("data");
-        for (int i = 0; i < dataArr.size(); i++) {
-            BookEntity newBook = gson.fromJson(dataArr.get(i).toString(), BookEntity.class);
-            booksData.add(newBook);
-        }
-    }
-
-    public static void addBook(BookEntity book) throws IOException {
-        System.out.println(book.toString());
+    public static void handleAddBook(BookEntity book) throws IOException {
+        System.out.println("logs: " + book.toString());
         book.setId(null);
-        http.post(API_PATH + "add", gson.toJson(book).toString());
-    }
-
-    public static void updateBook(BookEntity book) throws IOException {
-        http.put(API_PATH + "update", gson.toJson(book).toString());
+        http.post(API_PATH + "add", gson.toJson(book));
     }
 
     public void showNothingIsSelectedAlert() {

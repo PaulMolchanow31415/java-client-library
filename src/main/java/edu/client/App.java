@@ -28,11 +28,12 @@ public class App extends Application {
         stage.show();
     }
 
-    public static void showBookEditDialog(BookEntity bookObj, long id) {
+    public static boolean showBookEditDialog(BookEntity bookObj, int id) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("view/editBook.fxml"));
             AnchorPane page = loader.load();
+
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Редактирование книги");
             dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -44,8 +45,10 @@ public class App extends Application {
             controller.setLabels(bookObj, id);
 
             dialogStage.showAndWait();
+            return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

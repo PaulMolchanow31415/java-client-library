@@ -7,14 +7,16 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@RequiredArgsConstructor
 public class BookListResponse extends BaseResponse {
     private List<BookEntity> data;
 
     public BookListResponse(List<BookEntity> data) {
         super(true, "Список книг");
         this.data = data;
+    }
+
+    public BookListResponse() {
+        super(true, "Данные о книге");
     }
 }

@@ -60,7 +60,7 @@
       </GridPane>
       <ButtonBar layoutX="166.0" layoutY="323.0" prefHeight="39.0" prefWidth="269.0" AnchorPane.leftAnchor="166.0" AnchorPane.rightAnchor="165.0">
         <buttons>
-            <Button mnemonicParsing="false" onAction="#handleOk" text="Сохранить">
+            <Button mnemonicParsing="false" onAction="#saveBook" text="Сохранить">
                <font>
                   <Font size="18.0" />
                </font>
