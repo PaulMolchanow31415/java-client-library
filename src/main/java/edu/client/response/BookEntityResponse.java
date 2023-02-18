@@ -1,14 +1,16 @@
 package edu.client.response;
 
 import edu.client.entity.BookEntity;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Data
 public class BookEntityResponse extends BaseResponse {
-    private Iterable<BookEntity> data;
+    private BookEntity data;
 
-    public BookEntityResponse(Iterable<BookEntity> data) {
-        super(true, "Данные о книге");
+    public BookEntityResponse(boolean success, String message, BookEntity data) {
+        super(success, message);
         this.data = data;
     }
 }

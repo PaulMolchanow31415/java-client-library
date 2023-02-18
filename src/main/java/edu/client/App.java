@@ -4,8 +4,6 @@ import edu.client.controller.AppController;
 import edu.client.controller.EditBookController;
 import edu.client.entity.BookEntity;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -15,8 +13,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class App extends Application {
+    private Stage primaryStage;
+
     @Override
     public void start(Stage stage) throws IOException {
+        this.primaryStage = stage;
+
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(App.class.getResource("view/main.fxml"));
         AnchorPane mainPane = loader.load();
@@ -25,10 +27,11 @@ public class App extends Application {
         stage.setScene(scene);
 
         AppController controller = loader.getController();
+        controller.setPrimaryStage(primaryStage);
         stage.show();
     }
 
-    public static boolean showBookEditDialog(BookEntity bookObj, int id) {
+    public static void showBookEditDialog(BookEntity bookObj) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("view/editBook.fxml"));
@@ -42,13 +45,11 @@ public class App extends Application {
 
             EditBookController controller = loader.getController();
             controller.setDialogStage(dialogStage);
-            controller.setLabels(bookObj, id);
+            controller.setLabels(bookObj);
 
             dialogStage.showAndWait();
-            return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
