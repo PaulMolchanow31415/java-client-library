@@ -13,7 +13,7 @@ import static edu.client.controller.AppController.API_PATH;
 public class BookDao {
     static HTTPUtils http = new HTTPUtils();
     static Gson gson = new Gson();
-    public static BookEntity sendBookAndGetData(BookEntity book) throws IOException {
+    public static BookEntity  sendBookAndGetData(BookEntity book) throws IOException {
         String response = http.post(API_PATH + "add", gson.toJson(book));
         JsonObject base = gson.fromJson(response, JsonObject.class);
         return gson.fromJson(base.get("data"), BookEntity.class);

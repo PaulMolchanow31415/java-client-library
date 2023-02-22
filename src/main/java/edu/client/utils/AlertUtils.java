@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 
 public class AlertUtils {
     private static Alert alert = new Alert(Alert.AlertType.NONE);
-    public static void showError(String message) {
+    public void showError(String message) {
         alert.setAlertType(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка заполнения");
         alert.setHeaderText("Пожалуйста, укажите корректные значения текстовых полей");

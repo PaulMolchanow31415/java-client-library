@@ -85,6 +85,9 @@ public class AppController {
             long ID = BookDao.sendBookAndGetData(tempBook).getId();
             tempBook.setId(ID);
             booksData.add(tempBook);
+            System.out.println("added: " + tempBook);
+        } else {
+            alerts.showError("Ошибка в написании данных");
         }
     }
 
@@ -108,7 +111,7 @@ public class AppController {
             clonedBook.setId(null);
             clonedBook.setId(BookDao.sendBookAndGetData(clonedBook).getId());
             booksData.add(clonedBook);
-            System.out.println("duplicated: " + booksData);
+            System.out.println("duplicated: " + clonedBook);
         } else {
             alerts.showNothingIsSelectedAlert();
         }
@@ -120,6 +123,8 @@ public class AppController {
         if (selectedBook != null) {
             App.showBookEditDialog(selectedBook);
             updateBook(selectedBook);
+            int index =  booksData.indexOf(selectedBook);
+            booksData.set(index, selectedBook);
         } else {
             alerts.showNothingIsSelectedAlert();
         }
