@@ -75,8 +75,8 @@ public class AppController {
 
     public static void updateBook(BookEntity book) throws IOException {
         BookDao.updateBook(book);
-        int index = booksData.get(book);
-        booksData.set(index, book);
+        int bookIndex = booksData.indexOf(book);
+        booksData.set(bookIndex, book);
     }
 
     @FXML
@@ -89,7 +89,7 @@ public class AppController {
             booksData.add(tempBook);
             System.out.println("added: " + tempBook);
         } else {
-            alerts.showError("Ошибка в написании данных");
+            AlertUtils.showError("Ошибка в написании данных");
         }
     }
 
