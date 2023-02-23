@@ -75,6 +75,8 @@ public class AppController {
 
     public static void updateBook(BookEntity book) throws IOException {
         BookDao.updateBook(book);
+        int index = booksData.get(book);
+        booksData.set(index, book);
     }
 
     @FXML
