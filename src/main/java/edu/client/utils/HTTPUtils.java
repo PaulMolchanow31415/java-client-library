@@ -6,6 +6,8 @@ import okhttp3.*;
 
 import java.io.IOException;
 
+import static edu.client.controller.AppController.DEFAULT_MEDIA_TYPE;
+
 public class HTTPUtils {
     OkHttpClient client = new OkHttpClient();
     static Gson gson = new Gson();
@@ -18,7 +20,7 @@ public class HTTPUtils {
     }
 
     public String post(String url, String json) throws IOException {
-        RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+        RequestBody body = RequestBody.create(json, MediaType.get(DEFAULT_MEDIA_TYPE));
         Request request = new Request.Builder().url(url).post(body).build();
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();
@@ -26,7 +28,7 @@ public class HTTPUtils {
     }
 
     public String put(String url, String json) throws IOException {
-        RequestBody body = RequestBody.create(json, MediaType.get("application/json; charset=utf-8"));
+        RequestBody body = RequestBody.create(json, MediaType.get(DEFAULT_MEDIA_TYPE));
         Request request = new Request.Builder().url(url).put(body).build();
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();

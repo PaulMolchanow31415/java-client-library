@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import edu.client.App;
 import edu.client.dao.BookDao;
 import edu.client.entity.BookEntity;
+import edu.client.properties.AppProperties;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
 import javafx.application.Platform;
@@ -22,7 +23,8 @@ import lombok.Setter;
 import java.io.IOException;
 
 public class AppController {
-    public static final String API_PATH = "http://localhost:8080/api/v1/book/";
+    public static final String API_PATH = AppProperties.getInstance().getProperty("api_path");
+    public static final String DEFAULT_MEDIA_TYPE = AppProperties.getInstance().getProperty("default_media_type");
     public static ObservableList<BookEntity> booksData = FXCollections.observableArrayList();
     static Gson gson = new Gson();
     AlertUtils alerts = new AlertUtils();
