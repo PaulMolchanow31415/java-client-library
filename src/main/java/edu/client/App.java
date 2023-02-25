@@ -34,7 +34,7 @@ public class App extends Application {
     public static void showBookEditDialog(BookEntity bookObj) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(App.class.getResource("view/editBook.fxml"));
+            loader.setLocation(App.class.getResource("view/editor.fxml"));
             AnchorPane page = loader.load();
 
             Stage dialogStage = new Stage();

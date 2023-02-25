@@ -1,7 +1,9 @@
 package edu.client.controller;
 
 import edu.client.dao.BookDao;
+import edu.client.entity.AuthorEntity;
 import edu.client.entity.BookEntity;
+import edu.client.entity.PublisherEntity;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
 import javafx.fxml.FXML;
@@ -17,9 +19,13 @@ public class EditBookController {
   @FXML
   private TextField nameField;
   @FXML
-  private TextField authorField;
+  private TextField authorNameField;
   @FXML
-  private TextField publisherField;
+  private TextField authorSurnameField;
+  @FXML
+  private TextField publisherNameField;
+  @FXML
+  private TextField publisherCityField;
   @FXML
   private TextField kindField;
   @FXML
@@ -37,8 +43,10 @@ public class EditBookController {
   public void setLabels(BookEntity bookObj) {
     this.book = bookObj;
     nameField.setText(book.getTitle());
-    authorField.setText(book.getAuthor());
-    publisherField.setText(book.getPublisher());
+    authorNameField.setText(book.getAuthor().getName());
+    authorSurnameField.setText(book.getAuthor().getSurname());
+    publisherNameField.setText(book.getPublisher().getName());
+    publisherCityField.setText(book.getPublisher().getCity());
     yearField.setText(book.getYearPub());
     kindField.setText(book.getKind());
   }
@@ -47,8 +55,13 @@ public class EditBookController {
   public void saveBook() throws IOException {
     if (isInputValidOrShowAlert()) {
       book.setTitle(nameField.getText());
-      book.setAuthor(authorField.getText());
-      book.setPublisher(publisherField.getText());
+      book.setAuthor(AuthorEntity
+              .builder()
+              .name(authorNameField.getText())
+              .surname(authorSurnameField.getText()).build());
+      book.setPublisher(PublisherEntity.builder()
+              .name(publisherNameField.getText())
+              .city(publisherCityField.getText()).build());
       book.setYearPub(yearField.getText());
       book.setKind(kindField.getText());
       book.setId(BookDao.sendBookAndGetData(book).getId());
@@ -66,8 +79,10 @@ public class EditBookController {
   private boolean isInputValidOrShowAlert() {
     String errorMessage = ValidationUtils.getErrorMessageFromBookFields(
             nameField.getText(),
-            authorField.getText(),
-            publisherField.getText(),
+            authorNameField.getText(),
+            authorSurnameField.getText(),
+            publisherNameField.getText(),
+            publisherCityField.getText(),
             kindField.getText(),
             yearField.getText());
 

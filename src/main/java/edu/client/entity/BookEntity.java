@@ -8,8 +8,8 @@ import lombok.Data;
 public class BookEntity implements Cloneable {
     private Long id;
     private String title;
-    private String author;
-    private String publisher;
+    private AuthorEntity author;
+    private PublisherEntity publisher;
     private String yearPub;
     private String kind;
 
@@ -26,9 +26,9 @@ public class BookEntity implements Cloneable {
     public static BookEntity getNullObject() {
         return BookEntity.builder()
                 .id(null)
-                .author("empty author")
+                .author(AuthorEntity.getNullObject())
+                .publisher(PublisherEntity.getNullObject())
                 .kind("empty kind")
-                .publisher("empty publisher")
                 .yearPub("empty year publishing")
                 .title("empty title")
                 .build();

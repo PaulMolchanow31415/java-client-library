@@ -19,14 +19,11 @@
       <TableView fx:id="tableBooks" layoutY="60.0" prefHeight="268.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
         <columns>
             <TableColumn fx:id="bookNameColumn" prefWidth="106.0" text="Название" />
-            <TableColumn fx:id="bookAuthorColumn" prefWidth="44.0" text="Автор" />
-            <TableColumn fx:id="bookPublisherColumn" prefWidth="75.0" text="Издательство" />
-            <TableColumn fx:id="bookYearColumn" prefWidth="75.0" text="Год выпуска" />
-            <TableColumn fx:id="bookKindColumn" prefWidth="75.0" text="Жанр" />
+            <TableColumn fx:id="authorNameColumn" prefWidth="128.0" text="Имя автора" />
+            <TableColumn fx:id="publisherNameColumn" prefWidth="156.0" text="Название издательства" />
+            <TableColumn fx:id="bookYearColumn" prefWidth="99.0" text="Год выпуска" />
+            <TableColumn fx:id="bookKindColumn" prefWidth="48.0" text="Жанр" />
         </columns>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
       </TableView>
       <ButtonBar layoutX="110.0" layoutY="333.0" prefHeight="0.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <buttons>

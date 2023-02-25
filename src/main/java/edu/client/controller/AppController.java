@@ -6,11 +6,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import edu.client.App;
 import edu.client.dao.BookDao;
+import edu.client.entity.AuthorEntity;
 import edu.client.entity.BookEntity;
+import edu.client.entity.PublisherEntity;
 import edu.client.properties.AppProperties;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
 import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import lombok.Setter;
 
 import java.io.IOException;
@@ -28,17 +34,16 @@ public class AppController {
     public static ObservableList<BookEntity> booksData = FXCollections.observableArrayList();
     static Gson gson = new Gson();
     AlertUtils alerts = new AlertUtils();
-    @Setter
-    private Stage primaryStage;
+    @Setter private Stage primaryStage;
 
     @FXML
     private TableView<BookEntity> tableBooks;
     @FXML
     private TableColumn<BookEntity, String> bookNameColumn;
     @FXML
-    private TableColumn<BookEntity, String> bookAuthorColumn;
+    private TableColumn<BookEntity, String> authorNameColumn;
     @FXML
-    private TableColumn<BookEntity, String> bookPublisherColumn;
+    private TableColumn<BookEntity, String> publisherNameColumn;
     @FXML
     private TableColumn<BookEntity, String> bookYearColumn;
     @FXML
@@ -50,7 +55,7 @@ public class AppController {
             setBookDataFromDao();
             updateTable();
             System.out.println("initial data: " + booksData);
-        } catch (IOException e) {
+        } catch (Exception e) {
             alerts.showServerNotFoundAlert(primaryStage);
             Platform.exit();
         }
@@ -68,8 +73,8 @@ public class AppController {
 
     private void updateTable() {
         bookNameColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        bookAuthorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
-        bookPublisherColumn.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        authorNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAuthor().getName()));
+        publisherNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPublisher().getName()));
         bookYearColumn.setCellValueFactory(new PropertyValueFactory<>("yearPub"));
         bookKindColumn.setCellValueFactory(new PropertyValueFactory<>("kind"));
         tableBooks.setItems(booksData);
@@ -111,8 +116,16 @@ public class AppController {
         BookEntity selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
             BookEntity clonedBook = selectedBook.clone();
-            //Точка отправки обьекта на сервер
             clonedBook.setId(null);
+            AuthorEntity clonedAuthor = clonedBook.getAuthor();
+            clonedAuthor.setId(null);
+            PublisherEntity clonedPublisher = clonedBook.getPublisher();
+            clonedPublisher.setId(null);
+
+            clonedBook.setAuthor(clonedAuthor);
+            clonedBook.setPublisher(clonedPublisher);
+
+            //Точка отправки обьекта на сервер
             clonedBook.setId(BookDao.sendBookAndGetData(clonedBook).getId());
             booksData.add(clonedBook);
             System.out.println("duplicated: " + clonedBook);
