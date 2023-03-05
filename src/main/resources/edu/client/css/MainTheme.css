@@ -1,13 +1,21 @@
+/* MAIN FONT PROPERTIES */
+
 * {
+    /* colors */
+    accent: #87CA53;
+    secondary: #9653CA;
+    bordersColor: #D9D9D9;
+    dark: #252525;
+    /* font */
     -fx-font-family: Arial;
     -fx-font-size: 12px;
 }
-.content {
-    -fx-background-color: #4568ac;
+.content > * {
+    -fx-text-fill: dark;
+    -fx-border-radius: 0;
 }
 .content__wrapper .label .text {
     -fx-fill-text: #fff;
-    -fx-fill: #fff;
 }
 .label.title .text {
     -fx-font-size: 24px;
@@ -25,6 +33,9 @@
     -fx-text-fill: white;
     -fx-opacity: 1;
 }
+
+/* TABLE */
+
 .table-view {
     -fx-base: #fff;
     -fx-control-inner-background: #fff;
@@ -33,14 +44,14 @@
     -fx-table-header-border-color: transparent;
 }
 .table-view .column-header-background {
-    -fx-background-color: transparent;
+    -fx-background-color: secondary;
 }
 .table-view .column-header,
 .table-view .filler {
     -fx-size: 20;
     -fx-border-width: 0 0 1 0;
     -fx-background-color: transparent;
-    -fx-border-color: transparent transparent #d7d7d7 transparent;
+    -fx-border-color: transparent transparent bordersColor transparent;
     -fx-border-insets: 0 10 1 0;
 }
 .col-sm .label {
@@ -49,7 +60,6 @@
 .col-md .label {
     -fx-padding: 10 16 10 0;
 }
-/* TABLE VIEW */
 .table-view .table-cell {
     -fx-text-fill: #282828;
 }
@@ -85,16 +95,15 @@
 .table-view .placeholder .label {
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 3px 16px;
-    -fx-line-height: 20px;
-    -fx-font-size: 12px;
+    -fx-line-height: 18px;
+    -fx-font-size: 16px;
     -fx-fill-text: #282828;
 }
-/*table styles end*/
 .table-view .column-header .label {
     -fx-font-weight: bold;
-    -fx-line-height: 30px;
-    -fx-font-size: 24px;
-    -fx-text-fill: #282828;
+    -fx-line-height: 18px;
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
     -fx-alignment: center-left;
     -fx-opacity: 1;
 }
@@ -120,13 +129,20 @@
     -fx-padding: 0;
     -fx-shape: null;
 }
+
+/* PANE */
+
 .split-pane:horizontal > .split-pane-divider {
-    -fx-border-color: transparent #efefef transparent #efefef;
-    -fx-background-color: transparent;
+    -fx-border-color: bordersColor;
+    -fx-max-width: 1;
+    -fx-pref-width: 1;
 }
 .split-pane {
     -fx-padding: 1 0 0 0;
 }
+
+/* MENU */
+
 .menu-bar {
     -fx-background-color: #fff;
     -fx-text-fill: #000;
@@ -164,6 +180,9 @@
     -fx-font-size: 12px;
     -fx-line-height: 20px;
 }
+
+/* BUTTON */
+
 .button-bar {
     -fx-padding: 0 16px 0 0;
 }
@@ -219,4 +238,15 @@
     -fx-text-fill: #d25454;
     -fx-background-color: #fff;
     -fx-cursor: hand;
+}
+
+/* SEARCH */
+
+.search-box {
+    -fx-prompt-text-fill: #B6B6B6;
+    -fx-border-radius: 0;
+    -fx-border-color: bordersColor;
+}
+.search-box:focused {
+    -fx-border-color: accent;
 }

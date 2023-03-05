@@ -5,23 +5,23 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PublisherEntity {
+public class Publisher {
     private Long id;
     private String name;
     private String city;
 
     @Override
-    public PublisherEntity clone() {
+    public Publisher clone() {
         try {
-            return (PublisherEntity) super.clone();
+            return (Publisher) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
         return getNullObject();
     }
 
-    public static PublisherEntity getNullObject() {
-        return PublisherEntity.builder()
+    public static Publisher getNullObject() {
+        return Publisher.builder()
                 .id(null)
                 .name("empty name publisher")
                 .city("empty city publisher")

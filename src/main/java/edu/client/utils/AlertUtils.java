@@ -5,6 +5,13 @@ import javafx.stage.Stage;
 
 public class AlertUtils {
     private static Alert alert = new Alert(Alert.AlertType.NONE);
+    public static void showError(String message, String cause) {
+        alert.setAlertType(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка");
+        alert.setTitle(cause);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
     public static void showError(String message) {
         alert.setAlertType(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка заполнения");

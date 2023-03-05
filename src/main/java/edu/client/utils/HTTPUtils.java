@@ -6,7 +6,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 
-import static edu.client.controller.AppController.DEFAULT_MEDIA_TYPE;
+import static edu.client.controller.LauncherController.DEFAULT_MEDIA_TYPE;
 
 public class HTTPUtils {
     OkHttpClient client = new OkHttpClient();

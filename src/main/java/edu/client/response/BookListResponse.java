@@ -1,17 +1,15 @@
 package edu.client.response;
 
-import edu.client.entity.BookEntity;
+import edu.client.entity.Book;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Data
 public class BookListResponse extends BaseResponse {
-    private List<BookEntity> data;
+    private List<Book> data;
 
-    public BookListResponse(List<BookEntity> data) {
+    public BookListResponse(List<Book> data) {
         super(true, "Список книг");
         this.data = data;
     }

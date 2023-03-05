@@ -5,32 +5,34 @@ import lombok.Data;
 
 @Data
 @Builder
-public class BookEntity implements Cloneable {
+public class Book implements Cloneable {
     private Long id;
-    private String title;
-    private AuthorEntity author;
-    private PublisherEntity publisher;
-    private String yearPub;
-    private String kind;
+    private String title; // название
+    private String origin; // Происхождение книги
+    private String section; // Раздел библиотеки (специальная литература, хобби, беллетристика и так далее)
+    private String yearPub; // Год издания
+    private Author author;
+    private Publisher publisher;
 
     @Override
-    public BookEntity clone() {
+    public Book clone() {
         try {
-            return (BookEntity) super.clone();
+            return (Book) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
         return getNullObject();
     }
 
-    public static BookEntity getNullObject() {
-        return BookEntity.builder()
+    public static Book getNullObject() {
+        return Book.builder()
                 .id(null)
-                .author(AuthorEntity.getNullObject())
-                .publisher(PublisherEntity.getNullObject())
-                .kind("empty kind")
-                .yearPub("empty year publishing")
                 .title("empty title")
+                .origin("empty origin")
+                .section("empty section")
+                .yearPub("empty year publishing")
+                .author(Author.getNullObject())
+                .publisher(Publisher.getNullObject())
                 .build();
     }
 }

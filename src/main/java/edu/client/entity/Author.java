@@ -5,26 +5,28 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AuthorEntity {
+public class Author {
     private Long id;
     private String name;
     private String surname;
+    private String patronymic;
 
     @Override
-    public AuthorEntity clone() {
+    public Author clone() {
         try {
-            return (AuthorEntity) super.clone();
+            return (Author) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
         return getNullObject();
     }
 
-    public static AuthorEntity getNullObject() {
-        return AuthorEntity.builder()
+    public static Author getNullObject() {
+        return Author.builder()
                 .id(null)
                 .name("empty name author")
                 .surname("empty surname author")
+                .patronymic("empty patronymic author")
                 .build();
     }
 }

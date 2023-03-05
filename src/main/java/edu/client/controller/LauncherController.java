@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import edu.client.App;
+import edu.client.Launcher;
 import edu.client.dao.BookDao;
 import edu.client.entity.Author;
 import edu.client.entity.Book;
@@ -26,7 +26,7 @@ import lombok.Setter;
 
 import java.io.IOException;
 
-public class AppController {
+public class LauncherController {
     public static final String API_PATH = AppProperties.getInstance().getProperty("api_path");
     public static final String DEFAULT_MEDIA_TYPE = AppProperties.getInstance().getProperty("default_media_type");
     public static ObservableList<Book> booksData = FXCollections.observableArrayList();
@@ -96,7 +96,7 @@ public class AppController {
     @FXML
     public void handleAddBook() throws IOException {
         Book tempBook = Book.getNullObject();
-        App.showBookEditDialog(tempBook);
+        Launcher.showBookEditDialog(tempBook);
         try {
             ValidationUtils.validateBook(tempBook);
             tempBook.setId(BookDao.sendBookAndGetData(tempBook).getId());
@@ -153,7 +153,7 @@ public class AppController {
     public void handleEditBook() {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
-            App.showBookEditDialog(selectedBook);
+            Launcher.showBookEditDialog(selectedBook);
             updateBook(selectedBook);
             int index = booksData.indexOf(selectedBook);
             booksData.set(index, selectedBook);
