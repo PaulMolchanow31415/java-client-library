@@ -6,16 +6,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import edu.client.App;
 import edu.client.dao.BookDao;
-import edu.client.entity.AuthorEntity;
-import edu.client.entity.BookEntity;
-import edu.client.entity.PublisherEntity;
+import edu.client.entity.Author;
+import edu.client.entity.Book;
+import edu.client.entity.Publisher;
+import edu.client.exception.BookValidationException;
 import edu.client.properties.AppProperties;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,7 +22,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import lombok.Setter;
 
 import java.io.IOException;
@@ -31,23 +29,24 @@ import java.io.IOException;
 public class AppController {
     public static final String API_PATH = AppProperties.getInstance().getProperty("api_path");
     public static final String DEFAULT_MEDIA_TYPE = AppProperties.getInstance().getProperty("default_media_type");
-    public static ObservableList<BookEntity> booksData = FXCollections.observableArrayList();
+    public static ObservableList<Book> booksData = FXCollections.observableArrayList();
     static Gson gson = new Gson();
     AlertUtils alerts = new AlertUtils();
-    @Setter private Stage primaryStage;
+    @Setter
+    private Stage primaryStage;
 
     @FXML
-    private TableView<BookEntity> tableBooks;
+    private TableView<Book> tableBooks;
     @FXML
-    private TableColumn<BookEntity, String> bookNameColumn;
+    private TableColumn<Book, String> bookNameColumn;
     @FXML
-    private TableColumn<BookEntity, String> authorNameColumn;
+    private TableColumn<Book, String> authorNameColumn;
     @FXML
-    private TableColumn<BookEntity, String> publisherNameColumn;
+    private TableColumn<Book, String> publisherNameColumn;
     @FXML
-    private TableColumn<BookEntity, String> bookYearColumn;
+    private TableColumn<Book, String> bookYearColumn;
     @FXML
-    private TableColumn<BookEntity, String> bookKindColumn;
+    private TableColumn<Book, String> bookKindColumn;
 
     @FXML
     private void initialize() {
@@ -61,13 +60,17 @@ public class AppController {
         }
     }
 
-    public void setBookDataFromDao() throws IOException {
-        String response = BookDao.getBookData();
-        JsonObject base = gson.fromJson(response, JsonObject.class);
-        JsonArray dataArr = base.getAsJsonArray("data");
-        for (JsonElement element : dataArr) {
-            BookEntity newBook = gson.fromJson(element.toString(), BookEntity.class);
-            booksData.add(newBook);
+    public void setBookDataFromDao() {
+        try {
+            String response = BookDao.getBookData();
+            JsonObject base = gson.fromJson(response, JsonObject.class);
+            JsonArray dataArr = base.getAsJsonArray("data");
+            for (JsonElement element : dataArr) {
+                Book newBook = gson.fromJson(element.toString(), Book.class);
+                booksData.add(newBook);
+            }
+        } catch (IOException e) {
+            AlertUtils.showError(e.getMessage());
         }
     }
 
@@ -80,67 +83,79 @@ public class AppController {
         tableBooks.setItems(booksData);
     }
 
-    public static void updateBook(BookEntity book) throws IOException {
-        BookDao.updateBook(book);
-        int bookIndex = booksData.indexOf(book);
-        booksData.set(bookIndex, book);
+    public static void updateBook(Book book) {
+        try {
+            BookDao.updateBook(book);
+            int bookIndex = booksData.indexOf(book);
+            booksData.set(bookIndex, book);
+        } catch (IOException e) {
+            AlertUtils.showError(e.getMessage());
+        }
     }
 
     @FXML
     public void handleAddBook() throws IOException {
-        BookEntity tempBook = BookEntity.getNullObject();
+        Book tempBook = Book.getNullObject();
         App.showBookEditDialog(tempBook);
-        if (ValidationUtils.validateBook(tempBook)) {
-            long ID = BookDao.sendBookAndGetData(tempBook).getId();
-            tempBook.setId(ID);
+        try {
+            ValidationUtils.validateBook(tempBook);
+            tempBook.setId(BookDao.sendBookAndGetData(tempBook).getId());
             booksData.add(tempBook);
             System.out.println("added: " + tempBook);
-        } else {
+        } catch (BookValidationException e) {
             AlertUtils.showError("Ошибка в написании данных");
         }
     }
 
     @FXML
-    public void handleDeleteBook() throws IOException {
-        BookEntity selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+    public void handleDeleteBook() {
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
-            BookDao.deleteBook(selectedBook);
-            booksData.remove(selectedBook);
+            try {
+                BookDao.deleteBook(selectedBook);
+                booksData.remove(selectedBook);
+            } catch (IOException e) {
+                AlertUtils.showError(e.getMessage());
+            }
         } else {
             alerts.showNothingIsSelectedAlert();
         }
     }
 
     @FXML
-    public void handleDuplicateBook() throws IOException {
-        BookEntity selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+    public void handleDuplicateBook() {
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
-            BookEntity clonedBook = selectedBook.clone();
+            Book clonedBook = selectedBook.clone();
             clonedBook.setId(null);
-            AuthorEntity clonedAuthor = clonedBook.getAuthor();
+            Author clonedAuthor = clonedBook.getAuthor();
             clonedAuthor.setId(null);
-            PublisherEntity clonedPublisher = clonedBook.getPublisher();
+            Publisher clonedPublisher = clonedBook.getPublisher();
             clonedPublisher.setId(null);
 
             clonedBook.setAuthor(clonedAuthor);
             clonedBook.setPublisher(clonedPublisher);
 
-            //Точка отправки обьекта на сервер
-            clonedBook.setId(BookDao.sendBookAndGetData(clonedBook).getId());
-            booksData.add(clonedBook);
-            System.out.println("duplicated: " + clonedBook);
+            try {
+                //Точка отправки обьекта на сервер
+                clonedBook.setId(BookDao.sendBookAndGetData(clonedBook).getId());
+                booksData.add(clonedBook);
+                System.out.println("duplicated: " + clonedBook);
+            } catch (IOException e) {
+                AlertUtils.showError(e.getMessage());
+            }
         } else {
             alerts.showNothingIsSelectedAlert();
         }
     }
 
     @FXML
-    public void handleEditBook() throws IOException {
-        BookEntity selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+    public void handleEditBook() {
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
             App.showBookEditDialog(selectedBook);
             updateBook(selectedBook);
-            int index =  booksData.indexOf(selectedBook);
+            int index = booksData.indexOf(selectedBook);
             booksData.set(index, selectedBook);
         } else {
             alerts.showNothingIsSelectedAlert();

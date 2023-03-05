@@ -2,7 +2,7 @@ package edu.client;
 
 import edu.client.controller.AppController;
 import edu.client.controller.EditBookController;
-import edu.client.entity.BookEntity;
+import edu.client.entity.Book;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -31,7 +31,7 @@ public class App extends Application {
         stage.show();
     }
 
-    public static void showBookEditDialog(BookEntity bookObj) {
+    public static void showBookEditDialog(Book bookObj) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("view/editor.fxml"));
