@@ -7,6 +7,7 @@ import edu.client.utils.AlertUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -25,6 +26,7 @@ public class Launcher extends Application {
             loader.setLocation(Launcher.class.getResource("view/main.fxml"));
             AnchorPane mainPane = loader.load();
             Scene scene = new Scene(mainPane);
+            stage.getIcons().add(new Image("file:app-icon.png"));
             stage.setTitle("Библиотека");
             stage.setScene(scene);
 
@@ -46,6 +48,7 @@ public class Launcher extends Application {
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Редактирование книги");
+            dialogStage.getIcons().add(new Image("file:edit-icon.png"));
             dialogStage.initModality(Modality.WINDOW_MODAL);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);

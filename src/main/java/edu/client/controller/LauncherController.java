@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lombok.Setter;
 
@@ -70,7 +71,7 @@ public class LauncherController {
                 booksData.add(newBook);
             }
         } catch (IOException e) {
-            AlertUtils.showError(e.getMessage());
+            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
         }
     }
 
@@ -123,33 +124,6 @@ public class LauncherController {
     }
 
     @FXML
-    public void handleDuplicateBook() {
-        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            Book clonedBook = selectedBook.clone();
-            clonedBook.setId(null);
-            Author clonedAuthor = clonedBook.getAuthor();
-            clonedAuthor.setId(null);
-            Publisher clonedPublisher = clonedBook.getPublisher();
-            clonedPublisher.setId(null);
-
-            clonedBook.setAuthor(clonedAuthor);
-            clonedBook.setPublisher(clonedPublisher);
-
-            try {
-                //Точка отправки обьекта на сервер
-                clonedBook.setId(BookDao.sendBookAndGetData(clonedBook).getId());
-                booksData.add(clonedBook);
-                System.out.println("duplicated: " + clonedBook);
-            } catch (IOException e) {
-                AlertUtils.showError(e.getMessage());
-            }
-        } else {
-            alerts.showNothingIsSelectedAlert();
-        }
-    }
-
-    @FXML
     public void handleEditBook() {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
@@ -160,5 +134,9 @@ public class LauncherController {
         } else {
             alerts.showNothingIsSelectedAlert();
         }
+    }
+
+    public void searchBook(KeyEvent keyEvent) {
+        System.out.println(keyEvent.toString());
     }
 }
