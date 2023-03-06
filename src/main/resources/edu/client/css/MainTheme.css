@@ -290,7 +290,7 @@ grid .label .text {
 }
 
 .grid-label .text {
-    -fx-font: Arial;
+    -fx-font-family: Arial;
 }
 
 /* ORIGIN BOOK */
@@ -307,7 +307,7 @@ grid .label .text {
     -fx-font-size: 16;
     -fx-text-fill: dark;
     -fx-font-weight: bold;
-    -fx-font: Arial;
+    -fx-font-family: Arial;
 }
 
 .book-origin {

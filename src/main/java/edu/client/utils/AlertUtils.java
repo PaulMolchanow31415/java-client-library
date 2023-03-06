@@ -1,7 +1,6 @@
 package edu.client.utils;
 
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
 
 public class AlertUtils {
     private static Alert alert = new Alert(Alert.AlertType.NONE);
@@ -12,7 +11,7 @@ public class AlertUtils {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    public static void showError(String message) {
+    public static void showIncorrectFillAlert(String message) {
         alert.setAlertType(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка заполнения");
         alert.setHeaderText("Пожалуйста, укажите корректные значения текстовых полей");
@@ -20,7 +19,7 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    public void showNothingIsSelectedAlert() {
+    public static void showNothingIsSelectedAlert() {
         alert.setAlertType(Alert.AlertType.WARNING);
         alert.setTitle("Ничего не выбрано");
         alert.setHeaderText("Отсутсвует выбранный пользователь");
@@ -28,12 +27,11 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    public void showServerNotFoundAlert(Stage stage) {
+    public static void showServerNotFoundAlert() {
         alert.setAlertType(Alert.AlertType.ERROR);
         alert.setTitle("Не удалось подключится к серверу");
         alert.setHeaderText("Критическая ошибка");
         alert.setContentText("Включите сервер и БД, а также перезапустите программу");
-        alert.initOwner(stage);
         alert.showAndWait();
     }
 }

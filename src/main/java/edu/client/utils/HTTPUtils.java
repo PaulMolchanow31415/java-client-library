@@ -36,8 +36,10 @@ public class HTTPUtils {
     }
 
     public BaseResponse delete(String url, Long id) throws IOException {
+        /* debug info */
         System.out.println("id = " + id);
         System.out.println(url + "delete/" + id);
+        /* request */
         Request request = new Request.Builder().url(url + "delete/" + id).delete().build();
         try (Response response = client.newCall(request).execute()) {
             return gson.fromJson(response.body().string(), BaseResponse.class);

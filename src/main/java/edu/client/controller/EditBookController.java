@@ -87,7 +87,7 @@ public class EditBookController {
         if (errorMessage.length() == 0) {
             return true;
         } else {
-            AlertUtils.showError(errorMessage);
+            AlertUtils.showIncorrectFillAlert(errorMessage);
             return false;
         }
     }

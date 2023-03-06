@@ -6,9 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import edu.client.Launcher;
 import edu.client.dao.BookDao;
-import edu.client.entity.Author;
 import edu.client.entity.Book;
-import edu.client.entity.Publisher;
 import edu.client.exception.BookValidationException;
 import edu.client.properties.AppProperties;
 import edu.client.utils.AlertUtils;
@@ -32,36 +30,26 @@ public class LauncherController {
     public static final String DEFAULT_MEDIA_TYPE = AppProperties.getInstance().getProperty("default_media_type");
     public static ObservableList<Book> booksData = FXCollections.observableArrayList();
     static Gson gson = new Gson();
-    AlertUtils alerts = new AlertUtils();
-    @Setter
-    private Stage primaryStage;
 
     @FXML
     private TableView<Book> tableBooks;
     @FXML
-    private TableColumn<Book, String> bookNameColumn;
-    @FXML
-    private TableColumn<Book, String> authorNameColumn;
-    @FXML
-    private TableColumn<Book, String> publisherNameColumn;
-    @FXML
-    private TableColumn<Book, String> bookYearColumn;
-    @FXML
-    private TableColumn<Book, String> bookKindColumn;
+    private TableColumn<Book, String> titleColumn;
 
     @FXML
     private void initialize() {
         try {
-            setBookDataFromDao();
+            serializeBooksDataFromDao();
             updateTable();
+            /* print default data in db */
             System.out.println("initial data: " + booksData);
         } catch (Exception e) {
-            alerts.showServerNotFoundAlert(primaryStage);
+            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
             Platform.exit();
         }
     }
 
-    public void setBookDataFromDao() {
+    public void serializeBooksDataFromDao() {
         try {
             String response = BookDao.getBookData();
             JsonObject base = gson.fromJson(response, JsonObject.class);
@@ -71,16 +59,12 @@ public class LauncherController {
                 booksData.add(newBook);
             }
         } catch (IOException e) {
-            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
+            AlertUtils.showServerNotFoundAlert();
         }
     }
 
     private void updateTable() {
-        bookNameColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        authorNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAuthor().getName()));
-        publisherNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPublisher().getName()));
-        bookYearColumn.setCellValueFactory(new PropertyValueFactory<>("yearPub"));
-        bookKindColumn.setCellValueFactory(new PropertyValueFactory<>("kind"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         tableBooks.setItems(booksData);
     }
 
@@ -90,21 +74,22 @@ public class LauncherController {
             int bookIndex = booksData.indexOf(book);
             booksData.set(bookIndex, book);
         } catch (IOException e) {
-            AlertUtils.showError(e.getMessage());
+            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
         }
     }
 
     @FXML
-    public void handleAddBook() throws IOException {
-        Book tempBook = Book.getNullObject();
-        Launcher.showBookEditDialog(tempBook);
+    public void handleAddBook() {
         try {
+            Book tempBook = Book.getNullObject();
+            Launcher.showBookEditDialog(tempBook);
             ValidationUtils.validateBook(tempBook);
             tempBook.setId(BookDao.sendBookAndGetData(tempBook).getId());
             booksData.add(tempBook);
+            /* debug info */
             System.out.println("added: " + tempBook);
-        } catch (BookValidationException e) {
-            AlertUtils.showError("Ошибка в написании данных");
+        } catch (Exception e) {
+            AlertUtils.showIncorrectFillAlert("Ошибка в написании данных");
         }
     }
 
@@ -116,10 +101,10 @@ public class LauncherController {
                 BookDao.deleteBook(selectedBook);
                 booksData.remove(selectedBook);
             } catch (IOException e) {
-                AlertUtils.showError(e.getMessage());
+                AlertUtils.showIncorrectFillAlert(e.getMessage());
             }
         } else {
-            alerts.showNothingIsSelectedAlert();
+            AlertUtils.showNothingIsSelectedAlert();
         }
     }
 
@@ -132,11 +117,12 @@ public class LauncherController {
             int index = booksData.indexOf(selectedBook);
             booksData.set(index, selectedBook);
         } else {
-            alerts.showNothingIsSelectedAlert();
+            AlertUtils.showNothingIsSelectedAlert();
         }
     }
 
-    public void searchBook(KeyEvent keyEvent) {
+    /* TODO ================= */
+    public void handleSearch(KeyEvent keyEvent) {
         System.out.println(keyEvent.toString());
     }
 }
