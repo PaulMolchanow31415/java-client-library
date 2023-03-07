@@ -7,21 +7,18 @@ import com.google.gson.JsonObject;
 import edu.client.Launcher;
 import edu.client.dao.BookDao;
 import edu.client.entity.Book;
-import edu.client.exception.BookValidationException;
 import edu.client.properties.AppProperties;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
-import lombok.Setter;
 
 import java.io.IOException;
 
@@ -35,6 +32,18 @@ public class LauncherController {
     private TableView<Book> tableBooks;
     @FXML
     private TableColumn<Book, String> titleColumn;
+    @FXML
+    private Label titleLabel;
+    @FXML
+    private Label authorLabel;
+    @FXML
+    private Label yearPubLabel;
+    @FXML
+    private Label sectionLabel;
+    @FXML
+    private Label publisherLabel;
+    @FXML
+    private Label originLabel;
 
     @FXML
     private void initialize() {
@@ -47,6 +56,42 @@ public class LauncherController {
             AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
             Platform.exit();
         }
+    }
+
+    @FXML
+    private void handleAdd() {
+        Book tempBook = Book.getNullObject();
+        Launcher.showBookEditDialog(tempBook);
+        addBook(tempBook);
+    }
+
+    @FXML
+    private void handleEdit() {
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+        if (selectedBook != null) {
+            Launcher.showBookEditDialog(selectedBook);
+            updateBook(selectedBook);
+            int index = booksData.indexOf(selectedBook);
+            booksData.set(index, selectedBook);
+        } else {
+            AlertUtils.showNothingIsSelectedAlert();
+        }
+    }
+
+    @FXML
+    private void handleDelete() {
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+        if (selectedBook != null) {
+            deleteBook(selectedBook);
+        } else {
+            AlertUtils.showNothingIsSelectedAlert();
+        }
+    }
+
+    /* TODO ================= */
+    @FXML
+    private void handleSearch(KeyEvent keyEvent) {
+        System.out.println(keyEvent.toString());
     }
 
     public void serializeBooksDataFromDao() {
@@ -68,6 +113,18 @@ public class LauncherController {
         tableBooks.setItems(booksData);
     }
 
+    public static void addBook(Book book) {
+        try {
+            ValidationUtils.validateBook(book);
+            book.setId(BookDao.sendBookAndGetData(book).getId());
+            booksData.add(book);
+            /* debug info */
+            System.out.println("added: " + book);
+        } catch (Exception e) {
+            AlertUtils.showIncorrectFillAlert("Ошибка в написании данных");
+        }
+    }
+
     public static void updateBook(Book book) {
         try {
             BookDao.updateBook(book);
@@ -78,51 +135,12 @@ public class LauncherController {
         }
     }
 
-    @FXML
-    public void handleAddBook() {
+    public static void deleteBook(Book book) {
         try {
-            Book tempBook = Book.getNullObject();
-            Launcher.showBookEditDialog(tempBook);
-            ValidationUtils.validateBook(tempBook);
-            tempBook.setId(BookDao.sendBookAndGetData(tempBook).getId());
-            booksData.add(tempBook);
-            /* debug info */
-            System.out.println("added: " + tempBook);
-        } catch (Exception e) {
-            AlertUtils.showIncorrectFillAlert("Ошибка в написании данных");
+            BookDao.deleteBook(book);
+            booksData.remove(book);
+        } catch (IOException e) {
+            AlertUtils.showIncorrectFillAlert(e.getMessage());
         }
-    }
-
-    @FXML
-    public void handleDeleteBook() {
-        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            try {
-                BookDao.deleteBook(selectedBook);
-                booksData.remove(selectedBook);
-            } catch (IOException e) {
-                AlertUtils.showIncorrectFillAlert(e.getMessage());
-            }
-        } else {
-            AlertUtils.showNothingIsSelectedAlert();
-        }
-    }
-
-    @FXML
-    public void handleEditBook() {
-        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            Launcher.showBookEditDialog(selectedBook);
-            updateBook(selectedBook);
-            int index = booksData.indexOf(selectedBook);
-            booksData.set(index, selectedBook);
-        } else {
-            AlertUtils.showNothingIsSelectedAlert();
-        }
-    }
-
-    /* TODO ================= */
-    public void handleSearch(KeyEvent keyEvent) {
-        System.out.println(keyEvent.toString());
     }
 }

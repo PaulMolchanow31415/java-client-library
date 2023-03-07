@@ -429,11 +429,13 @@ grid .label .text {
 
 /* EDITOR */
 
+/*
 .edit {
 }
 
 .edit__top-label {
 }
+*/
 
 .edit__grid {
     -fx-padding: 24 32 16 32;
@@ -444,6 +446,12 @@ grid .label .text {
     -fx-padding: 8 16;
     -fx-border-color: bordersColor;
     -fx-fill: #B6B6B6;
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+}
+
+.edit__input .text {
+    -fx-stroke-width: 0;
 }
 
 .edit__input:hover,
@@ -464,8 +472,19 @@ grid .label .text {
     -fx-padding: 8 16;
 }
 
-
 .edit__h-box {
     -fx-content-display: right;
     -fx-display-caret: right;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+}
+
+.text-area:focused .content {
+    -fx-background-color: white;
+}
+
+.text-area .content .text {
+    -fx-stroke-width: 0;
 }
