@@ -8,16 +8,14 @@ import java.util.Properties;
 
 @Getter
 public class AppProperties {
-    private final String FILENAME = "src/main/app.properties";
+    private static final String FILENAME = "src/main/resources/app.properties";
     private static final AppProperties configFile = new AppProperties();
-    private final Properties property = new Properties();
-    private String message = "";
+    private static final Properties property = new Properties();
 
     private AppProperties() {
         try(InputStream input = new FileInputStream(FILENAME)){
             property.load(input);
         } catch (Exception e) {
-            message = "Не получается открыть конфигурационный файл";
             e.printStackTrace();
         }
     }

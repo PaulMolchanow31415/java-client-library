@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class Publisher {
-    private Long id;
+    private Integer id;
     private String name;
     private String city;
 

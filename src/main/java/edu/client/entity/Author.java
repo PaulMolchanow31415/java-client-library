@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class Author {
-    private Long id;
+    private Integer id;
     private String name;
     private String surname;
     private String patronymic;

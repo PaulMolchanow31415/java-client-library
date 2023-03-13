@@ -1,33 +1,32 @@
 package edu.client.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import edu.client.Launcher;
+import edu.client.MainApp;
 import edu.client.dao.BookDao;
+import edu.client.domain.Library;
 import edu.client.entity.Book;
-import edu.client.properties.AppProperties;
+import edu.client.exception.BookValidationException;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
+import lombok.Setter;
 
 import java.io.IOException;
 
-public class LauncherController {
-    public static final String API_PATH = AppProperties.getInstance().getProperty("api_path");
-    public static final String DEFAULT_MEDIA_TYPE = AppProperties.getInstance().getProperty("default_media_type");
-    public static ObservableList<Book> booksData = FXCollections.observableArrayList();
-    static Gson gson = new Gson();
+public class MainController {
+    @Setter
+    private Stage primaryStage;
+    @Setter
+    private Library library;
+    @Setter
+    private MainApp mainApp;
 
+    /* main app FXML */
     @FXML
     private TableView<Book> tableBooks;
     @FXML
@@ -47,76 +46,92 @@ public class LauncherController {
 
     @FXML
     private void initialize() {
-        try {
-            serializeBooksDataFromDao();
-            updateTable();
-            /* print default data in db */
-            System.out.println("initial data: " + booksData);
-        } catch (Exception e) {
-            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
-            Platform.exit();
-        }
+        updateTable();
+
+        tableBooks.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showBookDetails(newValue));
     }
 
     @FXML
-    private void handleAdd() {
+    private void handleAdd() throws Exception {
         Book tempBook = Book.getNullObject();
-        Launcher.showBookEditDialog(tempBook);
-        addBook(tempBook);
+        boolean isSaveClicked = mainApp.showBookEditDialog(tempBook);
+        if (isSaveClicked) {
+            library.add(tempBook);
+        }
     }
 
     @FXML
-    private void handleEdit() {
+    private void handleEdit() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
-            Launcher.showBookEditDialog(selectedBook);
-            updateBook(selectedBook);
-            int index = booksData.indexOf(selectedBook);
-            booksData.set(index, selectedBook);
+            boolean isSaveClicked = mainApp.showBookEditDialog(selectedBook);
+            if (isSaveClicked) {
+                showBookDetails(selectedBook);
+                int index = library.getBooksData().indexOf(selectedBook);
+                library.edit(index, selectedBook);
+            }
         } else {
             AlertUtils.showNothingIsSelectedAlert();
         }
     }
 
     @FXML
-    private void handleDelete() {
+    private void handleDelete() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
-            deleteBook(selectedBook);
+            tableBooks.getItems().remove(selectedBook);
+            library.remove(selectedBook.getId());
         } else {
             AlertUtils.showNothingIsSelectedAlert();
         }
     }
 
-    /* TODO ================= */
     @FXML
     private void handleSearch(KeyEvent keyEvent) {
-        System.out.println(keyEvent.toString());
+        // todo
+        tableBooks.getItems().filtered()
     }
 
+    private void updateTable() {
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        tableBooks.setItems(library.getBooksData());
+    }
+
+    private void showBookDetails(Book book) {
+        if (book != null) {
+            titleLabel.setText(book.getTitle());
+            authorLabel.setText(book.getAuthor().getName()
+                    + " " + book.getAuthor().getSurname()
+                    + " " + book.getAuthor().getPatronymic());
+            publisherLabel.setText(book.getPublisher().getName()
+                    + " " + book.getPublisher().getCity());
+            yearPubLabel.setText(book.getYearPub());
+            sectionLabel.setText(book.getSection());
+            originLabel.setText(book.getOrigin());
+        } else {
+            titleLabel.setText("");
+            authorLabel.setText("");
+            publisherLabel.setText("");
+            yearPubLabel.setText("");
+            sectionLabel.setText("");
+            originLabel.setText("");
+        }
+    }
+
+    // fixme
     public void serializeBooksDataFromDao() {
         try {
-            String response = BookDao.getBookData();
-            JsonObject base = gson.fromJson(response, JsonObject.class);
-            JsonArray dataArr = base.getAsJsonArray("data");
-            for (JsonElement element : dataArr) {
-                Book newBook = gson.fromJson(element.toString(), Book.class);
-                booksData.add(newBook);
-            }
+            booksData.addAll(BookDao.getBooksData());
         } catch (IOException e) {
             AlertUtils.showServerNotFoundAlert();
         }
     }
 
-    private void updateTable() {
-        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        tableBooks.setItems(booksData);
-    }
-
     public static void addBook(Book book) {
         try {
             ValidationUtils.validateBook(book);
-            book.setId(BookDao.sendBookAndGetData(book).getId());
+            book.setId(BookDao.addBook(book).getId());
             booksData.add(book);
             /* debug info */
             System.out.println("added: " + book);

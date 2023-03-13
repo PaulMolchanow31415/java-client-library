@@ -19,7 +19,7 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="700.0" styleClass="content" stylesheets="@../css/MainTheme.css"
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="edu.client.controller.LauncherController">
+            fx:controller="edu.client.controller.MainController">
     <children>
         <SplitPane dividerPositions="0.4107142857142857" maxHeight="1.7976931348623157E308"
                    maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"

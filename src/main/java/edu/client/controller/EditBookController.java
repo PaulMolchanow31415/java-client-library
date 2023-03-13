@@ -1,94 +1,104 @@
 package edu.client.controller;
 
-import edu.client.dao.BookDao;
+import edu.client.MainApp;
+import edu.client.domain.Library;
 import edu.client.entity.Author;
 import edu.client.entity.Book;
 import edu.client.entity.Publisher;
+import edu.client.exception.BookValidationException;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lombok.Getter;
-
-import java.io.IOException;
+import lombok.Setter;
 
 public class EditBookController {
+    private Book currentBook;
+    @Getter
+    private boolean saveClicked = false;
+    @Setter
+    private Library library;
+    @Setter
+    private Stage editStage;
+    @Setter
+    private MainApp mainApp;
+
+    /* edit controller FXML */
     @FXML
-    private TextField nameField;
+    private TextField titleField;
     @FXML
     private TextField authorNameField;
     @FXML
     private TextField authorSurnameField;
     @FXML
+    private TextField authorPatronymicField;
+    @FXML
     private TextField publisherNameField;
     @FXML
     private TextField publisherCityField;
     @FXML
-    private TextField kindField;
+    private TextField yearPubField;
     @FXML
-    private TextField yearField;
-
-    private Stage editBookStage;
-    private Book book;
-    @Getter
-    private boolean okClicked = false;
-
-    public void setDialogStage(Stage dialogStage) {
-        this.editBookStage = dialogStage;
-    }
-
-    public void setLabels(Book bookObj) {
-        this.book = bookObj;
-        nameField.setText(book.getTitle());
-        authorNameField.setText(book.getAuthor().getName());
-        authorSurnameField.setText(book.getAuthor().getSurname());
-        publisherNameField.setText(book.getPublisher().getName());
-        publisherCityField.setText(book.getPublisher().getCity());
-        yearField.setText(book.getYearPub());
-        kindField.setText(book.getOrigin());
-    }
+    private TextField sectionField;
+    @FXML
+    private TextArea originTextArea;
 
     @FXML
-    public void saveBook() throws IOException {
-        if (isInputValidOrShowAlert()) {
-            book.setTitle(nameField.getText());
-            book.setAuthor(Author
-                    .builder()
-                    .name(authorNameField.getText())
-                    .surname(authorSurnameField.getText()).build());
-            book.setPublisher(Publisher.builder()
-                    .name(publisherNameField.getText())
-                    .city(publisherCityField.getText()).build());
-            book.setYearPub(yearField.getText());
-            book.setOrigin(kindField.getText());
-            book.setId(BookDao.sendBookAndGetData(book).getId());
+    public void handleSave() {
+        try {
+            library.add(assembleBook());
+            saveClicked = true;
 
-            okClicked = true;
-            editBookStage.close();
+        } catch (BookValidationException e) {
+            AlertUtils.showIncorrectFillAlert(e.getMessage());
+        } catch (Exception e) {
+            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
+        } finally {
+            editStage.close();
         }
     }
 
     @FXML
-    public void handleCancel() {
-        editBookStage.close();
+    public void handleClose() {
+        editStage.close();
     }
 
-    private boolean isInputValidOrShowAlert() {
-        String errorMessage = ValidationUtils.getErrorMessageFromBookFields(
-                nameField.getText(),
-                authorNameField.getText(),
-                authorSurnameField.getText(),
-                publisherNameField.getText(),
-                publisherCityField.getText(),
-                kindField.getText(),
-                yearField.getText());
+    public void setFields(Book bookObj) {
+        this.currentBook = bookObj;
 
-        if (errorMessage.length() == 0) {
-            return true;
-        } else {
-            AlertUtils.showIncorrectFillAlert(errorMessage);
-            return false;
-        }
+        titleField.setText(currentBook.getTitle());
+        yearPubField.setText(currentBook.getYearPub());
+        sectionField.setText(currentBook.getSection());
+        originTextArea.setText(currentBook.getOrigin());
+        authorNameField.setText(currentBook.getAuthor().getName());
+        authorSurnameField.setText(currentBook.getAuthor().getSurname());
+        authorPatronymicField.setText(currentBook.getAuthor().getPatronymic());
+        publisherNameField.setText(currentBook.getPublisher().getName());
+        publisherCityField.setText(currentBook.getPublisher().getCity());
+    }
+
+    private Book assembleBook() throws BookValidationException {
+//        currentBook.setId(BookDao.addBook(currentBook).getId());
+        Book assembly = Book.builder()
+                .title(titleField.getText())
+                .section(sectionField.getText())
+                .yearPub(yearPubField.getText())
+                .author(Author.builder()
+                        .name(authorNameField.getText())
+                        .surname(authorSurnameField.getText())
+                        .patronymic(authorPatronymicField.getText())
+                        .build())
+                .publisher(Publisher.builder()
+                        .name(publisherNameField.getText())
+                        .city(publisherCityField.getText())
+                        .build())
+                .origin(originTextArea.getText())
+                .build();
+
+        ValidationUtils.validateBook(assembly);
+        return assembly;
     }
 }

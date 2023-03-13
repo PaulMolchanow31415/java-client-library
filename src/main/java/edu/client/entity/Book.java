@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class Book implements Cloneable {
-    private Long id;
+    private Integer id;
     private String title; // название
     private String origin; // Происхождение книги
     private String section; // Раздел библиотеки (специальная литература, хобби, беллетристика и так далее)
