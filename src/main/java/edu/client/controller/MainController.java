@@ -7,6 +7,7 @@ import edu.client.entity.Book;
 import edu.client.exception.BookValidationException;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 import lombok.Setter;
 
 import java.io.IOException;
+import java.util.function.Predicate;
 
 public class MainController {
     @Setter
@@ -90,7 +92,7 @@ public class MainController {
     @FXML
     private void handleSearch(KeyEvent keyEvent) {
         // todo
-        tableBooks.getItems().filtered()
+        // https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
     }
 
     private void updateTable() {

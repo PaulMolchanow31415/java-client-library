@@ -30,7 +30,7 @@ public class HttpClientUtils {
         }
     }
 
-    public String delete(String url, Long id) throws Exception {
+    public String delete(String url, Integer id) throws Exception {
         Request request = new Request.Builder().url(url + "delete/" + id).delete().build();
         try (Response response = http.newCall(request).execute()) {
             return response.body().string();

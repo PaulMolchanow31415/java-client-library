@@ -6,7 +6,7 @@ public interface Dao<T> {
 
     List<T> getAll() throws Exception;
 
-    Long save(T t) throws Exception;
+    Integer save(T t) throws Exception;
 
     void update(T t) throws Exception;
 

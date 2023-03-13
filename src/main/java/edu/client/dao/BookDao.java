@@ -33,7 +33,7 @@ public class BookDao implements Dao<Book> {
      * @return id of added book
      */
     @Override
-    public Long save(Book book) throws Exception {
+    public Integer save(Book book) throws Exception {
         String response = client.post(API_PATH + "add", gson.toJson(book));
         JsonObject base = gson.fromJson(response, JsonObject.class);
         return gson.fromJson(base.get("data"), Book.class).getId();
