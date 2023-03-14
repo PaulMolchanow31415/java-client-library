@@ -1,6 +1,6 @@
 package edu.client.utils;
 
-import edu.client.entity.Book;
+import edu.client.model.Book;
 import edu.client.exception.BookValidationException;
 
 public class ValidationUtils {

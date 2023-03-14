@@ -1,4 +1,4 @@
-package edu.client.entity;
+package edu.client.model;
 
 import lombok.Builder;
 import lombok.Data;

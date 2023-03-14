@@ -9,9 +9,9 @@ import java.util.Properties;
 
 @Getter
 public class AppProperties {
-    private static final File FILE = new File("src/main/resources/app.properties");
     private static final AppProperties configFile = new AppProperties();
-    private static final Properties property = new Properties();
+    private final Properties property = new Properties();
+    private final File FILE = new File("src/main/resources/app.properties");
 
     private AppProperties() {
         try (InputStream input = new FileInputStream(FILE)) {

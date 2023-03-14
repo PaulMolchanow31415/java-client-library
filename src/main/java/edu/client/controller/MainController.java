@@ -3,26 +3,25 @@ package edu.client.controller;
 import edu.client.MainApp;
 import edu.client.dao.BookDao;
 import edu.client.domain.Library;
-import edu.client.entity.Book;
-import edu.client.exception.BookValidationException;
+import edu.client.model.Book;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lombok.Setter;
 
 import java.io.IOException;
-import java.util.function.Predicate;
 
 public class MainController {
-    @Setter
-    private Stage primaryStage;
     @Setter
     private Library library;
     @Setter
@@ -33,6 +32,8 @@ public class MainController {
     private TableView<Book> tableBooks;
     @FXML
     private TableColumn<Book, String> titleColumn;
+    @FXML
+    private TextField filterField;
     @FXML
     private Label titleLabel;
     @FXML
@@ -48,7 +49,7 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        updateTable();
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
 
         tableBooks.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showBookDetails(newValue));
@@ -59,6 +60,8 @@ public class MainController {
         Book tempBook = Book.getNullObject();
         boolean isSaveClicked = mainApp.showBookEditDialog(tempBook);
         if (isSaveClicked) {
+            this.showBookDetails(tempBook);
+            /* set book id and save */
             library.add(tempBook);
         }
     }
@@ -69,9 +72,8 @@ public class MainController {
         if (selectedBook != null) {
             boolean isSaveClicked = mainApp.showBookEditDialog(selectedBook);
             if (isSaveClicked) {
-                showBookDetails(selectedBook);
-                int index = library.getBooksData().indexOf(selectedBook);
-                library.edit(index, selectedBook);
+                this.showBookDetails(selectedBook);
+                library.edit(selectedBook);
             }
         } else {
             AlertUtils.showNothingIsSelectedAlert();
@@ -83,21 +85,71 @@ public class MainController {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
             tableBooks.getItems().remove(selectedBook);
-            library.remove(selectedBook.getId());
+            library.remove(selectedBook);
         } else {
             AlertUtils.showNothingIsSelectedAlert();
         }
     }
 
     @FXML
-    private void handleSearch(KeyEvent keyEvent) {
-        // todo
-        // https://code.makery.ch/blog/javafx-8-tableview-sorting-filtering/
-    }
+    public void handleFilter() {
+        FilteredList<Book> filteredData
+                = new FilteredList<>(library.getBooksData(), predicate -> true);
 
-    private void updateTable() {
-        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        tableBooks.setItems(library.getBooksData());
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(book -> {
+                if (newValue == null || newValue.isEmpty()) return true;
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (book.getTitle()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                else if (book.getSection()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                else if (book.getYearPub()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                else if (book.getOrigin()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                else if (book.getAuthor()
+                        .getName()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                else if (book.getAuthor()
+                        .getSurname()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                else if (book.getAuthor()
+                        .getPatronymic()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                else if (book.getPublisher()
+                        .getName()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                else if (book.getPublisher()
+                        .getCity()
+                        .toLowerCase()
+                        .contains(lowerCaseFilter)) return true;
+
+                return false;
+            });
+        });
+
+        SortedList<Book> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(tableBooks.comparatorProperty());
+        tableBooks.setItems(sortedData);
     }
 
     private void showBookDetails(Book book) {
@@ -120,44 +172,9 @@ public class MainController {
             originLabel.setText("");
         }
     }
-
-    // fixme
-    public void serializeBooksDataFromDao() {
-        try {
-            booksData.addAll(BookDao.getBooksData());
-        } catch (IOException e) {
-            AlertUtils.showServerNotFoundAlert();
-        }
-    }
-
-    public static void addBook(Book book) {
-        try {
-            ValidationUtils.validateBook(book);
-            book.setId(BookDao.addBook(book).getId());
-            booksData.add(book);
-            /* debug info */
-            System.out.println("added: " + book);
-        } catch (Exception e) {
-            AlertUtils.showIncorrectFillAlert("Ошибка в написании данных");
-        }
-    }
-
-    public static void updateBook(Book book) {
-        try {
-            BookDao.updateBook(book);
-            int bookIndex = booksData.indexOf(book);
-            booksData.set(bookIndex, book);
-        } catch (IOException e) {
-            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
-        }
-    }
-
-    public static void deleteBook(Book book) {
-        try {
-            BookDao.deleteBook(book);
-            booksData.remove(book);
-        } catch (IOException e) {
-            AlertUtils.showIncorrectFillAlert(e.getMessage());
-        }
-    }
+    /*this.updateTable();*/
+        /*private void updateTable() {
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        tableBooks.setItems(library.getBooksData());
+        }*/
 }

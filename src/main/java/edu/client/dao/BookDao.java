@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import edu.client.entity.Book;
+import edu.client.model.Book;
 import edu.client.properties.AppProperties;
 import edu.client.utils.HttpClientUtils;
 

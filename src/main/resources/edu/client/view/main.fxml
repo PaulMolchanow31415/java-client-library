@@ -43,7 +43,7 @@
                                                 <Image url="@../images/search-icon.png"/>
                                             </image>
                                         </ImageView>
-                                        <TextField onKeyPressed="#handleSearch" promptText="Что вы хотите найти ?"
+                                        <TextField fx:id="filterField" onAction="#handleFilter" promptText="Что вы хотите найти ?"
                                                    styleClass="search-box">
                                             <font>
                                                 <Font name="Arial" size="12.0"/>

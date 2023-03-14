@@ -2,9 +2,9 @@ package edu.client.controller;
 
 import edu.client.MainApp;
 import edu.client.domain.Library;
-import edu.client.entity.Author;
-import edu.client.entity.Book;
-import edu.client.entity.Publisher;
+import edu.client.model.Author;
+import edu.client.model.Book;
+import edu.client.model.Publisher;
 import edu.client.exception.BookValidationException;
 import edu.client.utils.AlertUtils;
 import edu.client.utils.ValidationUtils;
@@ -18,13 +18,9 @@ import lombok.Setter;
 public class EditBookController {
     private Book currentBook;
     @Getter
-    private boolean saveClicked = false;
-    @Setter
-    private Library library;
+    private boolean isSaveClicked = false;
     @Setter
     private Stage editStage;
-    @Setter
-    private MainApp mainApp;
 
     /* edit controller FXML */
     @FXML
@@ -49,8 +45,8 @@ public class EditBookController {
     @FXML
     public void handleSave() {
         try {
-            library.add(assembleBook());
-            saveClicked = true;
+            this.currentBook = assembleBook();
+            isSaveClicked = true;
 
         } catch (BookValidationException e) {
             AlertUtils.showIncorrectFillAlert(e.getMessage());

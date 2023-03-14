@@ -11,8 +11,8 @@ module edu.client {
 
     opens edu.client to javafx.fxml;
     exports edu.client;
-    exports edu.client.entity;
-    opens edu.client.entity to com.google.gson;
+    exports edu.client.model;
+    opens edu.client.model to com.google.gson;
     exports edu.client.controller;
     opens edu.client.controller to javafx.fxml;
     exports edu.client.utils;

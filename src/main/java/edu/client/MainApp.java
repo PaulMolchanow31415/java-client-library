@@ -4,7 +4,7 @@ import edu.client.controller.MainController;
 import edu.client.controller.EditBookController;
 import edu.client.domain.Library;
 import edu.client.domain.LibraryFacade;
-import edu.client.entity.Book;
+import edu.client.model.Book;
 import edu.client.utils.AlertUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -13,40 +13,65 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import lombok.Getter;
+
+import java.util.Objects;
 
 public class MainApp extends Application {
     private Stage primaryStage;
-    private final Library library = new LibraryFacade();
-    private static final FXMLLoader loader = new FXMLLoader();
+    @Getter
+    private Library library;
+
+    @Override
+    public void start(Stage stage) {
+        try {
+            this.library = new LibraryFacade();
+        } catch (Exception e) {
+            AlertUtils.showServerNotFoundAlert();
+            throw new RuntimeException();
+        }
+        this.primaryStage = stage;
+        initRootLayout();
+    }
 
     public void initRootLayout() {
         try {
+            FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/main.fxml"));
-            Image appIcon = new Image("images/app-icon.png");
             AnchorPane mainPane = loader.load();
+            Image appIcon = new Image(
+                    Objects.requireNonNull(
+                            MainApp.class.getResourceAsStream("images/app-icon.png")));
+
+            MainController controller = loader.getController();
+            controller.setLibrary(library);
+            controller.setMainApp(this);
+
             Scene scene = new Scene(mainPane);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Личная библиотека");
             primaryStage.getIcons().add(appIcon);
+            primaryStage.initStyle(StageStyle.DECORATED);
 
-            MainController controller = loader.getController();
-            controller.setPrimaryStage(primaryStage);
-            controller.setLibrary(library);
-            controller.setMainApp(this);
             primaryStage.show();
         } catch (Exception e) {
             AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
+            e.printStackTrace();
         }
     }
 
-    public boolean showBookEditDialog(Book bookObj) {
+    public boolean showBookEditDialog(Book tempBookObj) {
         try {
+            FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/editor.fxml"));
             AnchorPane page = loader.load();
+            Image editIcon = new Image(
+                    Objects.requireNonNull(
+                            MainApp.class.getResourceAsStream("images/edit-icon.png")));
 
             Stage editStage = new Stage();
             editStage.setTitle("Редактирование книги");
-            Image editIcon = new Image("images/edit-icon.png");
             editStage.getIcons().add(editIcon);
 
             editStage.initModality(Modality.WINDOW_MODAL);
@@ -55,23 +80,15 @@ public class MainApp extends Application {
 
             EditBookController controller = loader.getController();
             controller.setEditStage(editStage);
-            controller.setLibrary(library);
-            controller.setMainApp(this);
-            // fixme
-            controller.setFields(bookObj);
+            controller.setFields(tempBookObj);
 
             editStage.showAndWait();
             return controller.isSaveClicked();
         } catch (Exception e) {
             AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
+            e.printStackTrace();
             return false;
         }
-    }
-
-    @Override
-    public void start(Stage stage) {
-        this.primaryStage = stage;
-        initRootLayout();
     }
 
     public static void main(String[] args) {
