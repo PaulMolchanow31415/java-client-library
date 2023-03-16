@@ -23,8 +23,18 @@ public class Publisher {
     public static Publisher getNullObject() {
         return Publisher.builder()
                 .id(null)
+                .name("")
+                .city("")
+                .build();
+    }
+
+    /*
+    public static Publisher getNullObject() {
+        return Publisher.builder()
+                .id(null)
                 .name("empty name publisher")
                 .city("empty city publisher")
                 .build();
     }
+    */
 }

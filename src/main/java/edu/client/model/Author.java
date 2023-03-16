@@ -24,9 +24,20 @@ public class Author {
     public static Author getNullObject() {
         return Author.builder()
                 .id(null)
+                .name("")
+                .surname("")
+                .patronymic("")
+                .build();
+    }
+
+    /*
+    public static Author getNullObject() {
+        return Author.builder()
+                .id(null)
                 .name("empty name author")
                 .surname("empty surname author")
                 .patronymic("empty patronymic author")
                 .build();
     }
+    */
 }

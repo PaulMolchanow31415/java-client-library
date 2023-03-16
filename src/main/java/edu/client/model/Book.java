@@ -27,6 +27,19 @@ public class Book implements Cloneable {
     public static Book getNullObject() {
         return Book.builder()
                 .id(null)
+                .title("")
+                .origin("")
+                .section("")
+                .yearPub("")
+                .author(Author.getNullObject())
+                .publisher(Publisher.getNullObject())
+                .build();
+    }
+
+    /*
+    public static Book getNullObject() {
+        return Book.builder()
+                .id(null)
                 .title("empty title")
                 .origin("empty origin")
                 .section("empty section")
@@ -35,4 +48,5 @@ public class Book implements Cloneable {
                 .publisher(Publisher.getNullObject())
                 .build();
     }
+    */
 }

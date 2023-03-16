@@ -77,7 +77,7 @@ public class EditBookController {
     }
 
     private Book assembleBook() throws BookValidationException {
-//        currentBook.setId(BookDao.addBook(currentBook).getId());
+        //currentBook.setId(BookDao.addBook(currentBook).getId());
         Book assembly = Book.builder()
                 .title(titleField.getText())
                 .section(sectionField.getText())

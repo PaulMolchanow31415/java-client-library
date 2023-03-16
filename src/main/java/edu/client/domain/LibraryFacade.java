@@ -13,23 +13,19 @@ public class LibraryFacade implements Library {
         booksData.addAll(dao.getAll());
     }
 
-    @Override
     public void add(Book book) throws Exception {
         int id = dao.save(book);
         book.setId(id);
     }
 
-    @Override
     public void remove(Book book) throws Exception {
         dao.delete(book);
     }
 
-    @Override
     public void edit(Book book) throws Exception {
         dao.update(book);
     }
 
-    @Override
     public ObservableList<Book> getBooksData() {
         return booksData;
     }

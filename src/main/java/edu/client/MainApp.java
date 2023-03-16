@@ -1,7 +1,7 @@
 package edu.client;
 
-import edu.client.controller.MainController;
 import edu.client.controller.EditBookController;
+import edu.client.controller.MainController;
 import edu.client.domain.Library;
 import edu.client.domain.LibraryFacade;
 import edu.client.model.Book;
@@ -32,27 +32,21 @@ public class MainApp extends Application {
             throw new RuntimeException();
         }
         this.primaryStage = stage;
-        initRootLayout();
+        initMainWindow();
     }
 
-    public void initRootLayout() {
+    public void initMainWindow() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/main.fxml"));
-            AnchorPane mainPane = loader.load();
-            Image appIcon = new Image(
-                    Objects.requireNonNull(
-                            MainApp.class.getResourceAsStream("images/app-icon.png")));
+            AnchorPane booksOverview = loader.load();
 
             MainController controller = loader.getController();
-            controller.setLibrary(library);
-            controller.setMainApp(this);
+            controller.setFilteredTableBooks(this);
 
-            Scene scene = new Scene(mainPane);
+            Scene scene = new Scene(booksOverview);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Личная библиотека");
-            primaryStage.getIcons().add(appIcon);
-            primaryStage.initStyle(StageStyle.DECORATED);
+            primaryStage.initStyle(StageStyle.TRANSPARENT);
 
             primaryStage.show();
         } catch (Exception e) {

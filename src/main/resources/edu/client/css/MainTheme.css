@@ -1,6 +1,6 @@
 /* MAIN FONT PROPERTIES */
 
-* {
+.root {
     /* colors */
     accent: #87CA53;
     secondary: #9653CA;
@@ -39,6 +39,20 @@
     -fx-opacity: 1;
 }
 
+/* TOP MENU BAR DECORATED */
+
+.stage-top-menu {
+    -fx-padding: 6 16;
+}
+
+.stage-title-wrapper {
+    -fx-spacing: 8;
+}
+
+.stage-top-bar-title {
+    -fx-text-fill: dark;
+}
+
 /* TABLE */
 
 .table-view {
@@ -63,32 +77,10 @@
     -fx-border-color: transparent;
 }
 
-.col-sm .label {
-    -fx-padding: 6 16;
-}
-
-.col-md .label {
-    -fx-padding: 6 16 6 0;
-}
-
-.table-column .label {
-
-}
-
-.table-view .table-cell {
-    -fx-text-fill: dark;
-}
-
 .table-row-cell {
-    -fx-font-family: Arial;
-    -fx-font-style: normal;
-    -fx-font-weight: normal;
-    -fx-font-size: 12;
-    -fx-text-fill: dark;
     /* border */
     -fx-border-width: 1;
     -fx-border-color: bordersColor;
-    -fx-padding: 6 16;
 }
 
 .table-row-cell:empty {
@@ -104,10 +96,6 @@
     -fx-background-color: #d7d7d7;
 }
 
-.table-row-cell:filled:selected:hover {
-    /*-fx-background-color: #d7d7d7;*/
-}
-
 .table-row-cell:filled:selected {
     -fx-background-insets: 0;
     -fx-background-radius: 0;
@@ -120,12 +108,32 @@
     -fx-background-insets: 0;
 }
 
-.check-box-table-cell > .check-box:selected .box .mark {
-    -fx-background-color: transparent;
+.table-view .table-cell {
+    -fx-text-fill: dark;
+    -fx-font-family: Arial;
+    -fx-font-style: normal;
+    -fx-font-weight: normal;
+    -fx-font-size: 12;
+    -fx-border-insets: 4 16 6;
 }
 
-.check-box-table-cell > .check-box:selected .box {
-    -fx-background-color: #4568ac;
+.table-view .table-row-cell:empty {
+    -fx-border-width: 0;
+}
+
+.table-view .table-row-cell:focused .table-cel,
+.table-view .table-row-cell:selected .table-cell {
+    -fx-text-fill: accent;
+}
+
+.table-view:row-selection .placeholder .text {
+    -fx-font-size: 12;
+    -fx-content-display: "abc";
+    -fx-fill: dark;
+}
+
+.check-box-table-cell > .check-box:selected .box .mark {
+    -fx-background-color: transparent;
 }
 
 .table-view .placeholder .label {

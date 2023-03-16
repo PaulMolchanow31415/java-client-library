@@ -1,29 +1,19 @@
 package edu.client.controller;
 
 import edu.client.MainApp;
-import edu.client.dao.BookDao;
-import edu.client.domain.Library;
 import edu.client.model.Book;
 import edu.client.utils.AlertUtils;
-import edu.client.utils.ValidationUtils;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 import lombok.Setter;
 
-import java.io.IOException;
-
 public class MainController {
-    @Setter
-    private Library library;
     @Setter
     private MainApp mainApp;
 
@@ -33,7 +23,7 @@ public class MainController {
     @FXML
     private TableColumn<Book, String> titleColumn;
     @FXML
-    private TextField filterField;
+    private TextField filterBookField;
     @FXML
     private Label titleLabel;
     @FXML
@@ -62,7 +52,7 @@ public class MainController {
         if (isSaveClicked) {
             this.showBookDetails(tempBook);
             /* set book id and save */
-            library.add(tempBook);
+            mainApp.getLibrary().add(tempBook);
         }
     }
 
@@ -73,7 +63,7 @@ public class MainController {
             boolean isSaveClicked = mainApp.showBookEditDialog(selectedBook);
             if (isSaveClicked) {
                 this.showBookDetails(selectedBook);
-                library.edit(selectedBook);
+                mainApp.getLibrary().edit(selectedBook);
             }
         } else {
             AlertUtils.showNothingIsSelectedAlert();
@@ -85,71 +75,52 @@ public class MainController {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
             tableBooks.getItems().remove(selectedBook);
-            library.remove(selectedBook);
+            mainApp.getLibrary().remove(selectedBook);
         } else {
             AlertUtils.showNothingIsSelectedAlert();
         }
     }
 
-    @FXML
-    public void handleFilter() {
-        FilteredList<Book> filteredData
-                = new FilteredList<>(library.getBooksData(), predicate -> true);
+    public void setFilteredTableBooks(MainApp mainApp) {
+        this.setMainApp(mainApp);
 
-        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(book -> {
+        FilteredList<Book> filteredBooksData
+                = new FilteredList<>(mainApp.getLibrary().getBooksData(), predicate -> true);
+
+        filterBookField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredBooksData.setPredicate(book -> {
                 if (newValue == null || newValue.isEmpty()) return true;
 
                 String lowerCaseFilter = newValue.toLowerCase();
 
-                if (book.getTitle()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                else if (book.getSection()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                else if (book.getYearPub()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                else if (book.getOrigin()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                else if (book.getAuthor()
-                        .getName()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                else if (book.getAuthor()
-                        .getSurname()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                else if (book.getAuthor()
-                        .getPatronymic()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                else if (book.getPublisher()
-                        .getName()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                else if (book.getPublisher()
-                        .getCity()
-                        .toLowerCase()
-                        .contains(lowerCaseFilter)) return true;
-
-                return false;
+                return comparisonBookFields(book, lowerCaseFilter);
             });
         });
 
-        SortedList<Book> sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(tableBooks.comparatorProperty());
-        tableBooks.setItems(sortedData);
+        SortedList<Book> sortedBooksData = new SortedList<>(filteredBooksData);
+        sortedBooksData.comparatorProperty().bind(tableBooks.comparatorProperty());
+
+        tableBooks.setItems(sortedBooksData);
+    }
+
+    public boolean comparisonBookFields(Book book, String lowerCaseFilter) {
+        if (book.getTitle().toLowerCase().contains(lowerCaseFilter)) return true;
+
+        else if (book.getSection().toLowerCase().contains(lowerCaseFilter)) return true;
+
+        else if (book.getYearPub().toLowerCase().contains(lowerCaseFilter)) return true;
+
+        else if (book.getOrigin().toLowerCase().contains(lowerCaseFilter)) return true;
+
+        else if (book.getAuthor().getName().toLowerCase().contains(lowerCaseFilter)) return true;
+
+        else if (book.getAuthor().getSurname().toLowerCase().contains(lowerCaseFilter)) return true;
+
+        else if (book.getAuthor().getPatronymic().toLowerCase().contains(lowerCaseFilter)) return true;
+
+        else if (book.getPublisher().getName().toLowerCase().contains(lowerCaseFilter)) return true;
+
+        else return book.getPublisher().getCity().toLowerCase().contains(lowerCaseFilter);
     }
 
     private void showBookDetails(Book book) {
@@ -172,9 +143,10 @@ public class MainController {
             originLabel.setText("");
         }
     }
+
     /*this.updateTable();*/
-        /*private void updateTable() {
-        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        tableBooks.setItems(library.getBooksData());
-        }*/
+    /*private void updateTable() {
+    titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+    tableBooks.setItems(library.getBooksData());
+    }*/
 }
