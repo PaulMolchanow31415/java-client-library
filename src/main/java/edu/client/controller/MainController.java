@@ -1,8 +1,11 @@
 package edu.client.controller;
 
 import edu.client.MainApp;
+import edu.client.model.Author;
 import edu.client.model.Book;
 import edu.client.utils.AlertUtils;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -22,6 +25,11 @@ public class MainController {
     private TableView<Book> tableBooks;
     @FXML
     private TableColumn<Book, String> titleColumn;
+    // fixme
+    @FXML
+    private TableColumn<Book, String> authorInitialsColumn;
+    @FXML
+    private TableColumn<Book, String> publisherNameColumn;
     @FXML
     private TextField filterBookField;
     @FXML
@@ -40,30 +48,34 @@ public class MainController {
     @FXML
     private void initialize() {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorInitialsColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getAuthor().getInitials()));
+        publisherNameColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getPublisher().getName()));
 
         tableBooks.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showBookDetails(newValue));
     }
 
     @FXML
-    private void handleAdd() throws Exception {
+    private void handleAddBook() throws Exception {
         Book tempBook = Book.getNullObject();
         boolean isSaveClicked = mainApp.showBookEditDialog(tempBook);
         if (isSaveClicked) {
             this.showBookDetails(tempBook);
             /* set book id and save */
-            mainApp.getLibrary().add(tempBook);
+            mainApp.getLibrary().getBookManager().add(tempBook);
         }
     }
 
     @FXML
-    private void handleEdit() throws Exception {
+    private void handleEditBook() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
             boolean isSaveClicked = mainApp.showBookEditDialog(selectedBook);
             if (isSaveClicked) {
                 this.showBookDetails(selectedBook);
-                mainApp.getLibrary().edit(selectedBook);
+                mainApp.getLibrary().getBookManager().edit(selectedBook);
             }
         } else {
             AlertUtils.showNothingIsSelectedAlert();
@@ -71,14 +83,41 @@ public class MainController {
     }
 
     @FXML
-    private void handleDelete() throws Exception {
+    private void handleDeleteBook() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
         if (selectedBook != null) {
             tableBooks.getItems().remove(selectedBook);
-            mainApp.getLibrary().remove(selectedBook);
+            mainApp.getLibrary().getBookManager().remove(selectedBook);
         } else {
             AlertUtils.showNothingIsSelectedAlert();
         }
+    }
+
+    @FXML
+    private void handleEditAuthor() throws Exception {
+        Author selectedAuthor = tableBooks.getSelectionModel().getSelectedItem().getAuthor();
+        if (selectedAuthor != null) {
+            // todo
+            mainApp.showAuthorEditDialog(selectedAuthor);
+        }
+        // todo
+    }
+
+    @FXML
+    private void handleEditPublisher() throws Exception {
+    }
+
+    @FXML
+    private void handleDeleteAuthor() {
+    }
+
+    @FXML
+    private void handleDeletePublisher() {
+    }
+
+    @FXML
+    private void closeApp() {
+        Platform.exit();
     }
 
     public void setFilteredTableBooks(MainApp mainApp) {
@@ -87,15 +126,15 @@ public class MainController {
         FilteredList<Book> filteredBooksData
                 = new FilteredList<>(mainApp.getLibrary().getBooksData(), predicate -> true);
 
-        filterBookField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredBooksData.setPredicate(book -> {
-                if (newValue == null || newValue.isEmpty()) return true;
+        filterBookField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredBooksData.setPredicate(book -> {
 
-                String lowerCaseFilter = newValue.toLowerCase();
+                    if (newValue == null || newValue.isEmpty()) return true;
 
-                return comparisonBookFields(book, lowerCaseFilter);
-            });
-        });
+                    String lowerCaseFilter = newValue.toLowerCase();
+
+                    return comparisonBookFields(book, lowerCaseFilter);
+                }));
 
         SortedList<Book> sortedBooksData = new SortedList<>(filteredBooksData);
         sortedBooksData.comparatorProperty().bind(tableBooks.comparatorProperty());
@@ -143,10 +182,4 @@ public class MainController {
             originLabel.setText("");
         }
     }
-
-    /*this.updateTable();*/
-    /*private void updateTable() {
-    titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-    tableBooks.setItems(library.getBooksData());
-    }*/
 }

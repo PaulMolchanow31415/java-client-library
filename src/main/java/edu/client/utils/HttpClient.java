@@ -3,7 +3,7 @@ package edu.client.utils;
 import edu.client.properties.AppProperties;
 import okhttp3.*;
 
-public class HttpClientUtils {
+public class HttpClient {
     private static final String DEFAULT_MEDIA_TYPE = AppProperties.getInstance().getProperty("json_media_type");
     private static final OkHttpClient http = new OkHttpClient();
 
@@ -22,18 +22,18 @@ public class HttpClientUtils {
         }
     }
 
-    public String put(String url, String json) throws Exception {
+    public void put(String url, String json) throws Exception {
         RequestBody body = RequestBody.create(json, MediaType.get(DEFAULT_MEDIA_TYPE));
         Request request = new Request.Builder().url(url).put(body).build();
         try (Response response = http.newCall(request).execute()) {
-            return response.body().string();
+            response.body().string();
         }
     }
 
-    public String delete(String url, Integer id) throws Exception {
-        Request request = new Request.Builder().url(url + "delete/" + id).delete().build();
+    public void delete(String url, Integer id) throws Exception {
+        Request request = new Request.Builder().url(url + id).delete().build();
         try (Response response = http.newCall(request).execute()) {
-            return response.body().string();
+            response.body().string();
         }
     }
 

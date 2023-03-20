@@ -2,10 +2,12 @@ package edu.client.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Builder
-public class Publisher {
+@EqualsAndHashCode(callSuper = true)
+public class Publisher extends Entity {
     private Integer id;
     private String name;
     private String city;
@@ -27,14 +29,4 @@ public class Publisher {
                 .city("")
                 .build();
     }
-
-    /*
-    public static Publisher getNullObject() {
-        return Publisher.builder()
-                .id(null)
-                .name("empty name publisher")
-                .city("empty city publisher")
-                .build();
-    }
-    */
 }

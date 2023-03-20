@@ -2,10 +2,12 @@ package edu.client.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Builder
-public class Book implements Cloneable {
+@EqualsAndHashCode(callSuper = true)
+public class Book extends Entity {
     private Integer id;
     private String title; // название
     private String origin; // Происхождение книги
@@ -35,18 +37,4 @@ public class Book implements Cloneable {
                 .publisher(Publisher.getNullObject())
                 .build();
     }
-
-    /*
-    public static Book getNullObject() {
-        return Book.builder()
-                .id(null)
-                .title("empty title")
-                .origin("empty origin")
-                .section("empty section")
-                .yearPub("empty year publishing")
-                .author(Author.getNullObject())
-                .publisher(Publisher.getNullObject())
-                .build();
-    }
-    */
 }

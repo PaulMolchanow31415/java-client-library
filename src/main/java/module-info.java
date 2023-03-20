@@ -3,7 +3,6 @@ module edu.client {
     requires javafx.controls;
     requires javafx.fxml;
 
-    requires com.dlsc.formsfx;
     requires com.google.gson;
     requires okhttp3;
     requires static lombok;

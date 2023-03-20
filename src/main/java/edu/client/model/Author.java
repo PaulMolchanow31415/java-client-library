@@ -2,14 +2,20 @@ package edu.client.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Builder
-public class Author {
+@EqualsAndHashCode(callSuper = true)
+public class Author extends Entity {
     private Integer id;
     private String name;
     private String surname;
     private String patronymic;
+
+    public String getInitials() {
+        return name + ' ' + surname.charAt(0) + '.' + patronymic.charAt(0) + '.';
+    }
 
     @Override
     public Author clone() {
@@ -29,15 +35,4 @@ public class Author {
                 .patronymic("")
                 .build();
     }
-
-    /*
-    public static Author getNullObject() {
-        return Author.builder()
-                .id(null)
-                .name("empty name author")
-                .surname("empty surname author")
-                .patronymic("empty patronymic author")
-                .build();
-    }
-    */
 }

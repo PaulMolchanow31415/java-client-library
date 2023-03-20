@@ -1,51 +1,68 @@
 package edu.client;
 
+import edu.client.controller.EditAuthorController;
 import edu.client.controller.EditBookController;
 import edu.client.controller.MainController;
 import edu.client.domain.Library;
 import edu.client.domain.LibraryFacade;
+import edu.client.model.Author;
 import edu.client.model.Book;
 import edu.client.utils.AlertUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Getter;
 
-import java.util.Objects;
-
 public class MainApp extends Application {
+    private final FXMLLoader loader = new FXMLLoader();
     private Stage primaryStage;
     @Getter
     private Library library;
 
+    public static void main(String[] args) {
+        launch();
+    }
+
     @Override
     public void start(Stage stage) {
+        this.primaryStage = stage;
+        initLibrary();
+        initMainWindow();
+    }
+
+    private void initLibrary() {
         try {
             this.library = new LibraryFacade();
         } catch (Exception e) {
             AlertUtils.showServerNotFoundAlert();
             throw new RuntimeException();
         }
-        this.primaryStage = stage;
-        initMainWindow();
     }
 
-    public void initMainWindow() {
+    private Stage createDialogStage(AnchorPane page) {
+        Stage editStage = new Stage();
+        editStage.initModality(Modality.WINDOW_MODAL);
+        editStage.initStyle(StageStyle.TRANSPARENT);
+        Scene editScene = new Scene(page);
+        editStage.setScene(editScene);
+        return editStage;
+    }
+
+    /* WINDOWS */
+    private void initMainWindow() {
         try {
-            FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/main.fxml"));
             AnchorPane booksOverview = loader.load();
 
             MainController controller = loader.getController();
             controller.setFilteredTableBooks(this);
 
-            Scene scene = new Scene(booksOverview);
-            primaryStage.setScene(scene);
+            Scene mainScene = new Scene(booksOverview);
+            primaryStage.setScene(mainScene);
             primaryStage.initStyle(StageStyle.TRANSPARENT);
 
             primaryStage.show();
@@ -57,21 +74,10 @@ public class MainApp extends Application {
 
     public boolean showBookEditDialog(Book tempBookObj) {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/editor.fxml"));
-            AnchorPane page = loader.load();
-            Image editIcon = new Image(
-                    Objects.requireNonNull(
-                            MainApp.class.getResourceAsStream("images/edit-icon.png")));
+            loader.setLocation(MainApp.class.getResource("view/bookEditor.fxml"));
+            AnchorPane bookEditor = loader.load();
 
-            Stage editStage = new Stage();
-            editStage.setTitle("Редактирование книги");
-            editStage.getIcons().add(editIcon);
-
-            editStage.initModality(Modality.WINDOW_MODAL);
-            Scene scene = new Scene(page);
-            editStage.setScene(scene);
-
+            Stage editStage = createDialogStage(bookEditor);
             EditBookController controller = loader.getController();
             controller.setEditStage(editStage);
             controller.setFields(tempBookObj);
@@ -85,7 +91,21 @@ public class MainApp extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch();
+    public void /*fixme*/ showAuthorEditDialog(Author authorObj) {
+        try {
+            loader.setLocation(MainApp.class.getResource("view/authorEditor.fxml"));
+            AnchorPane authorEditor = loader.load();
+
+            Stage editAuthorStage = createDialogStage(authorEditor);
+            EditAuthorController authorController = loader.getController();
+            authorController.setEditAuthorStage(editAuthorStage);
+            authorController.setFields(authorObj);
+
+            editAuthorStage.showAndWait();
+            // todo
+        } catch (Exception e) {
+            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
+            e.printStackTrace();
+        }
     }
 }

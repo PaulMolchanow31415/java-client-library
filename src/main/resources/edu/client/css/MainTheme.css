@@ -39,20 +39,6 @@
     -fx-opacity: 1;
 }
 
-/* TOP MENU BAR DECORATED */
-
-.stage-top-menu {
-    -fx-padding: 6 16;
-}
-
-.stage-title-wrapper {
-    -fx-spacing: 8;
-}
-
-.stage-top-bar-title {
-    -fx-text-fill: dark;
-}
-
 /* TABLE */
 
 .table-view {
@@ -149,6 +135,7 @@
     -fx-alignment: center-left;
     -fx-opacity: 1;
     -fx-padding: 16;
+    -fx-cursor: hand;
 }
 
 .table-view .column-header .label .text {
@@ -246,6 +233,12 @@
     -fx-padding: 0;
     -fx-max-width: 43;
     -fx-max-height: 43;
+    -fx-border-color: accent;
+    -fx-border-width: 1;
+}
+
+.search-btn .svg {
+    -fx-fill: accent;
 }
 
 .search-box {
@@ -253,9 +246,10 @@
     -fx-border-radius: 0;
     -fx-border-color: bordersColor;
     -fx-border-width: 1;
+    -fx-pref-width: 500;
 }
 
-.search-box:focused {
+.search-box:focused, .search-box:hover {
     -fx-border-color: accent !important;
     -fx-border-insets: 0;
     -fx-border-width: 1;
@@ -266,7 +260,11 @@
 
 .top-label-pane {
     -fx-background-color: accent;
-    -fx-padding: 13 32;
+    -fx-padding: 9 32;
+}
+
+.top-label-pane.secondary {
+    -fx-background-color: secondary !important;
 }
 
 .top-label-pane .label {
@@ -282,6 +280,8 @@
 
 .grid {
     -fx-padding: 24 32;
+    -fx-hgap: 6;
+    -fx-vgap: 16;
 }
 
 grid .label {
@@ -325,7 +325,7 @@ grid .label .text {
 /* CONTROL BUTTONS */
 
 .h-box {
-    -fx-padding: 24 32;
+    -fx-padding: 16 32 24;
     -fx-hgap: 32;
 }
 
@@ -336,51 +336,13 @@ grid .label .text {
     -fx-border-radius: 0;
     -fx-border-width: 1;
     -fx-background-color: white;
+    -fx-cursor: hand;
 }
 
 .button .text {
     -fx-font-size: 12px;
     -fx-line-height: 20px;
     -fx-font-weight: bold;
-}
-
-.button:hover {
-    /*-fx-background-color: #4568ac;*/
-    /*-fx-text-fill: #fff;*/
-    -fx-cursor: hand;
-}
-
-.button:pressed,
-.button:default:hover:pressed {
-    /*-fx-background-color: white;*/
-    /*-fx-text-fill: #1d1d1d;*/
-}
-
-.button:focused {
-}
-
-.button:disabled,
-.button:default:disabled {
-    /*-fx-background-color: #fff;*/
-    /*-fx-border-color: #4568ac;*/
-    /*-fx-text-fill: white;*/
-}
-
-.button:default {
-}
-
-.button:default:hover {
-    /*-fx-background-color: #4568ac;*/
-}
-
-.button-cancel {
-    /*-fx-border-color: #4568ac;*/
-    /*-fx-border-width: 1;*/
-    /*-fx-text-fill: #000;*/
-}
-
-.button-remove {
-    /*-fx-text-fill: #000;*/
 }
 
 /* CUSTOMIZE */
@@ -409,6 +371,23 @@ grid .label .text {
     -fx-fill: secondary;
 }
 
+.button-menu {
+    -fx-padding: 8 32 8 16;
+    -fx-border-color: bordersColor;
+    -fx-border-width: 1;
+}
+
+.button-menu .text {
+    -fx-fill: dark;
+    -fx-font-size: 10;
+    -fx-font-weight: bold;
+}
+
+.button-menu-icon {
+    -fx-stroke: bordersColor;
+    -fx-alignment: center-right;
+}
+
 /* HOVER EFFECTS */
 
 .button-add:hover {
@@ -435,15 +414,33 @@ grid .label .text {
     -fx-fill: white;
 }
 
+.button-menu {
+    -fx-padding: 6;
+    -fx-border-width: 0;
+    -fx-border-radius: 4;
+    -fx-pref-width: 30;
+    -fx-pref-height: 30;
+    -fx-alignment: center;
+}
+
+.button-menu:hover {
+    -fx-background-color: bordersColor;
+}
+
+.button-menu-icon {
+    -fx-stroke: dark;
+}
+
 /* EDITOR */
 
-/*
 .edit {
+    -fx-border-width: 1;
+    -fx-border-color: accent;
 }
 
-.edit__top-label {
+.edit.edit--secondary {
+    -fx-border-color: secondary;
 }
-*/
 
 .edit__grid {
     -fx-padding: 24 32 16 32;
@@ -495,4 +492,46 @@ grid .label .text {
 
 .text-area .content .text {
     -fx-stroke-width: 0;
+}
+
+/* TOP MENU BAR DECORATED */
+
+.top-close-button {
+    -fx-background-color: transparent;
+    -fx-max-width: 26;
+    -fx-max-height: 26;
+    -fx-border-radius: 0;
+    -fx-padding: 6;
+    -fx-cursor: hand;
+}
+
+.top-close-button:hover {
+    -fx-background-color: rgba(227, 227, 227, 0.3);
+}
+
+/* COMBO-BOX */
+
+.combo-box {
+    -fx-padding: 3;
+    -fx-prompt-text-fill: dark;
+    -fx-cursor: open-hand;
+
+    -fx-border-color: secondary;
+    -fx-background-color: transparent;
+}
+
+.combo-box .list-cell:filled .text {
+    -fx-fill: secondary;
+}
+
+.combo-box .arrow {
+    -fx-background-color: secondary;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: white;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: white;
 }
