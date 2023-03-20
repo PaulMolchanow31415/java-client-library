@@ -1,7 +1,10 @@
 package edu.client.dispatcher;
 
+import edu.client.model.Author;
 import edu.client.model.Entity;
 import edu.client.utils.JsonParser;
+
+import java.util.List;
 
 public abstract class AbstractClient<T extends Entity> implements Client<T> {
     protected final JsonParser<T> parser = new JsonParser<>();
@@ -9,6 +12,11 @@ public abstract class AbstractClient<T extends Entity> implements Client<T> {
 
     public AbstractClient(String API) {
         this.API = API;
+    }
+
+    public List<T> getAll() throws Exception {
+        String response = httpClient.get(API, "all");
+        return parser.serializeToArray(response, T.class);
     }
 
     public Integer save(T t) throws Exception {

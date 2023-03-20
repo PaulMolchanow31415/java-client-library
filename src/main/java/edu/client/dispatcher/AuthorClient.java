@@ -11,13 +11,4 @@ public class AuthorClient extends AbstractClient<Author> {
     public AuthorClient() {
         super(API_PATH);
     }
-
-    public List<Author> getAll() throws Exception {
-        String response = httpClient.get(API_PATH, "all");
-//        return super.parser.fromJsonList(response, Author[].class);
-        return super.parser. (response, Author[].class);
-        /// https://futurestud.io/tutorials/gson-advanced-custom-serialization-part-1#:~:text=Gson%20Series%20Overview
-
-    }
-
 }

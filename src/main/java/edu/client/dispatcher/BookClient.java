@@ -14,6 +14,6 @@ public class BookClient extends AbstractClient<Book> {
 
     public List<Book> getAll() throws Exception {
         String response = httpClient.get(API_PATH, "all");
-        return super.parser.fromJsonList(response, Book[].class);
+        return super.parser.serializeToArray(response, Book.class);
     }
 }

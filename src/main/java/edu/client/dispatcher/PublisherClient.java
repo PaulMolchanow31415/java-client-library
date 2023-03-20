@@ -1,6 +1,5 @@
 package edu.client.dispatcher;
 
-import edu.client.model.Book;
 import edu.client.model.Publisher;
 import edu.client.properties.AppProperties;
 
@@ -15,7 +14,6 @@ public class PublisherClient extends AbstractClient<Publisher> {
 
     public List<Publisher> getAll() throws Exception {
         String response = httpClient.get(API_PATH, "all");
-//        return super.parser.fromJsonList(response, Publisher[].class);
-        return super.parser.stringToArray(response, Publisher[].class);
+        return super.parser.serializeToArray(response, Publisher.class);
     }
 }
