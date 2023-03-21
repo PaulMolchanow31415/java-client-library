@@ -2,11 +2,13 @@ package edu.client;
 
 import edu.client.controller.EditAuthorController;
 import edu.client.controller.EditBookController;
+import edu.client.controller.EditPublisherController;
 import edu.client.controller.MainController;
 import edu.client.domain.Library;
 import edu.client.domain.LibraryFacade;
 import edu.client.model.Author;
 import edu.client.model.Book;
+import edu.client.model.Publisher;
 import edu.client.utils.AlertUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +20,7 @@ import javafx.stage.StageStyle;
 import lombok.Getter;
 
 public class MainApp extends Application {
-    private final FXMLLoader loader = new FXMLLoader();
+//    private final FXMLLoader loader = new FXMLLoader();
     private Stage primaryStage;
     @Getter
     private Library library;
@@ -55,11 +57,13 @@ public class MainApp extends Application {
     /* WINDOWS */
     private void initMainWindow() {
         try {
+            FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/main.fxml"));
             AnchorPane booksOverview = loader.load();
 
             MainController controller = loader.getController();
-            controller.setFilteredTableBooks(this);
+            controller.setMainApp(this);
+            controller.setFilteredTableBooks();
 
             Scene mainScene = new Scene(booksOverview);
             primaryStage.setScene(mainScene);
@@ -74,12 +78,14 @@ public class MainApp extends Application {
 
     public boolean showBookEditDialog(Book tempBookObj) {
         try {
+            FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/bookEditor.fxml"));
             AnchorPane bookEditor = loader.load();
 
             Stage editStage = createDialogStage(bookEditor);
             EditBookController controller = loader.getController();
             controller.setEditStage(editStage);
+            controller.setMainApp(this);
             controller.setFields(tempBookObj);
 
             editStage.showAndWait();
@@ -91,8 +97,10 @@ public class MainApp extends Application {
         }
     }
 
-    public void /*fixme*/ showAuthorEditDialog(Author authorObj) {
+    /* MICRO AUTHOR / PUBLISHER DIALOGS */
+    public boolean showAuthorEditDialog(Author authorObj) {
         try {
+            FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/authorEditor.fxml"));
             AnchorPane authorEditor = loader.load();
 
@@ -102,10 +110,31 @@ public class MainApp extends Application {
             authorController.setFields(authorObj);
 
             editAuthorStage.showAndWait();
-            // todo
+            return authorController.isSaveClicked();
         } catch (Exception e) {
             AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showPublisherEditDialog(Publisher publisherObj) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(MainApp.class.getResource("view/publisherEditor.fxml"));
+            AnchorPane publisherEditor = loader.load();
+
+            Stage editPublisherStage = createDialogStage(publisherEditor);
+            EditPublisherController publisherController = loader.getController();
+            publisherController.setEditPublisherStage(editPublisherStage);
+            publisherController.setFields(publisherObj);
+
+            editPublisherStage.showAndWait();
+            return publisherController.isSaveClicked();
+        } catch (Exception e) {
+            AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
+            e.printStackTrace();
+            return false;
         }
     }
 }

@@ -3,6 +3,7 @@ package edu.client.controller;
 import edu.client.MainApp;
 import edu.client.model.Author;
 import edu.client.model.Book;
+import edu.client.model.Publisher;
 import edu.client.utils.AlertUtils;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -60,21 +61,27 @@ public class MainController {
     @FXML
     private void handleAddBook() throws Exception {
         Book tempBook = Book.getNullObject();
+
         boolean isSaveClicked = mainApp.showBookEditDialog(tempBook);
         if (isSaveClicked) {
-            this.showBookDetails(tempBook);
+            showBookDetails(tempBook);
             /* set book id and save */
-            mainApp.getLibrary().getBookManager().add(tempBook);
+            mainApp.getLibrary().getPublisherManager().add(tempBook.getPublisher());
+            mainApp.getLibrary().getAuthorManager().add(tempBook.getAuthor());
+            mainApp.getLibrary().getBookManager().add(minifyData(tempBook));
         }
     }
 
     @FXML
     private void handleEditBook() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+
         if (selectedBook != null) {
             boolean isSaveClicked = mainApp.showBookEditDialog(selectedBook);
             if (isSaveClicked) {
-                this.showBookDetails(selectedBook);
+                showBookDetails(selectedBook);
+                mainApp.getLibrary().getPublisherManager().edit(selectedBook.getPublisher());
+                mainApp.getLibrary().getAuthorManager().edit(selectedBook.getAuthor());
                 mainApp.getLibrary().getBookManager().edit(selectedBook);
             }
         } else {
@@ -85,6 +92,7 @@ public class MainController {
     @FXML
     private void handleDeleteBook() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+
         if (selectedBook != null) {
             tableBooks.getItems().remove(selectedBook);
             mainApp.getLibrary().getBookManager().remove(selectedBook);
@@ -95,24 +103,84 @@ public class MainController {
 
     @FXML
     private void handleEditAuthor() throws Exception {
-        Author selectedAuthor = tableBooks.getSelectionModel().getSelectedItem().getAuthor();
-        if (selectedAuthor != null) {
-            // todo
-            mainApp.showAuthorEditDialog(selectedAuthor);
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+
+        if (selectedBook == null) {
+            AlertUtils.showNothingIsSelectedAlert();
+            return;
         }
-        // todo
+        Author selectedAuthor = selectedBook.getAuthor();
+
+        if (selectedAuthor != null) {
+            boolean isSaveClicked = mainApp.showAuthorEditDialog(selectedAuthor);
+            if (isSaveClicked) {
+                showBookDetails(selectedBook);
+                mainApp.getLibrary().getAuthorManager().edit(selectedAuthor);
+            }
+        } else {
+            AlertUtils.showNotExistingItemAlert();
+        }
     }
 
     @FXML
     private void handleEditPublisher() throws Exception {
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+
+        if (selectedBook == null) {
+            AlertUtils.showNothingIsSelectedAlert();
+            return;
+        }
+        Publisher selectedPublisher = selectedBook.getPublisher();
+
+        if (selectedPublisher != null) {
+            boolean isSaveClicked = mainApp.showPublisherEditDialog(selectedPublisher);
+            if (isSaveClicked) {
+                showBookDetails(selectedBook);
+                mainApp.getLibrary().getPublisherManager().edit(selectedPublisher);
+            }
+        } else {
+            AlertUtils.showNotExistingItemAlert();
+        }
     }
 
     @FXML
-    private void handleDeleteAuthor() {
+    private void handleDeleteAuthor() throws Exception {
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+
+        if (selectedBook == null) {
+            AlertUtils.showNothingIsSelectedAlert();
+            return;
+        }
+        int index = tableBooks.getSelectionModel().getSelectedIndex();
+        Author selectedAuthor = selectedBook.getAuthor();
+
+        if (selectedAuthor != null) {
+            selectedBook.setAuthor(null);
+            tableBooks.getItems().set(index, selectedBook);
+            mainApp.getLibrary().getAuthorManager().remove(selectedAuthor);
+        } else {
+            AlertUtils.showNotExistingItemAlert();
+        }
     }
 
     @FXML
-    private void handleDeletePublisher() {
+    private void handleDeletePublisher() throws Exception {
+        Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+
+        if (selectedBook == null) {
+            AlertUtils.showNothingIsSelectedAlert();
+            return;
+        }
+        int index = tableBooks.getSelectionModel().getSelectedIndex();
+        Publisher selectedPublisher = selectedBook.getPublisher();
+
+        if (selectedPublisher != null) {
+            selectedBook.setPublisher(null);
+            tableBooks.getItems().set(index, selectedBook);
+            mainApp.getLibrary().getPublisherManager().remove(selectedPublisher);
+        } else {
+            AlertUtils.showNotExistingItemAlert();
+        }
     }
 
     @FXML
@@ -120,19 +188,14 @@ public class MainController {
         Platform.exit();
     }
 
-    public void setFilteredTableBooks(MainApp mainApp) {
-        this.setMainApp(mainApp);
-
+    public void setFilteredTableBooks() {
         FilteredList<Book> filteredBooksData
                 = new FilteredList<>(mainApp.getLibrary().getBooksData(), predicate -> true);
 
         filterBookField.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredBooksData.setPredicate(book -> {
-
                     if (newValue == null || newValue.isEmpty()) return true;
-
                     String lowerCaseFilter = newValue.toLowerCase();
-
                     return comparisonBookFields(book, lowerCaseFilter);
                 }));
 
@@ -181,5 +244,16 @@ public class MainController {
             sectionLabel.setText("");
             originLabel.setText("");
         }
+    }
+
+    public Book minifyData(Book book) {
+        if (book != null) {
+            book.getAuthor().setName(null);
+            book.getAuthor().setSurname(null);
+            book.getAuthor().setPatronymic(null);
+            book.getPublisher().setName(null);
+            book.getPublisher().setCity(null);
+        }
+        return book;
     }
 }

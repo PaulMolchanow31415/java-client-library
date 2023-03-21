@@ -25,7 +25,7 @@ public class EditPublisherController {
     @FXML
     private void handleSave() {
         try {
-            this.currentPublisher = assemblePublisher();
+            assemblePublisher();
             this.isSaveClicked = true;
             handleClose();
 
@@ -48,13 +48,15 @@ public class EditPublisherController {
         cityField.setText(currentPublisher.getCity());
     }
 
-    private Publisher assemblePublisher() throws ValidationException {
+    private void assemblePublisher() throws ValidationException {
         Publisher assembly = Publisher.builder()
                 .name(nameField.getText())
                 .city(cityField.getText())
                 .build();
 
         ValidationUtils.validate(assembly);
-        return assembly;
+
+        currentPublisher.setName(assembly.getName());
+        currentPublisher.setCity(assembly.getCity());
     }
 }

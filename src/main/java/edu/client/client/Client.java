@@ -1,4 +1,4 @@
-package edu.client.dispatcher;
+package edu.client.client;
 
 import edu.client.utils.HttpClient;
 

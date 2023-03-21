@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 @Builder
 @EqualsAndHashCode(callSuper = true)
 public class Book extends Entity {
-    private Integer id;
     private String title; // название
     private String origin; // Происхождение книги
     private String section; // Раздел библиотеки (специальная литература, хобби, беллетристика и так далее)
@@ -28,7 +27,6 @@ public class Book extends Entity {
 
     public static Book getNullObject() {
         return Book.builder()
-                .id(null)
                 .title("")
                 .origin("")
                 .section("")

@@ -1,9 +1,9 @@
 package edu.client.domain;
 
-import edu.client.dispatcher.AuthorClient;
-import edu.client.dispatcher.BookClient;
-import edu.client.dispatcher.Client;
-import edu.client.dispatcher.PublisherClient;
+import edu.client.client.AuthorClient;
+import edu.client.client.BookClient;
+import edu.client.client.Client;
+import edu.client.client.PublisherClient;
 import edu.client.domain.manager.AuthorManager;
 import edu.client.domain.manager.BookManager;
 import edu.client.domain.manager.PublisherManager;

@@ -1,8 +1,8 @@
 package edu.client.utils;
 
+import edu.client.exception.ValidationException;
 import edu.client.model.Author;
 import edu.client.model.Book;
-import edu.client.exception.ValidationException;
 import edu.client.model.Publisher;
 
 public class ValidationUtils {
@@ -18,10 +18,8 @@ public class ValidationUtils {
         String origin = book.getOrigin();
         String year = book.getYearPub();
 
-        /* author */
-        Integer authorId = book.getAuthor().getId();
-        /* publisher */
-        Integer publisherId = book.getPublisher().getId();
+        Author author = book.getAuthor();
+        Publisher publisher = book.getPublisher();
 
         /* unique */
         if (title == null || title.isBlank() || title.length() < 3 || title.length() > 255) {
@@ -36,11 +34,27 @@ public class ValidationUtils {
         if (year == null || year.isBlank() || !year.matches(yearRegex)) {
             errorsMessage.append("Не правильно введен год издания\n");
         }
-        if (authorId == null) {
-            errorsMessage.append("Поле автора не должно быть пустым\n");
+
+        if (author.getName() == null
+                || author.getName().isBlank() || !author.getName().matches(authorRegex)) {
+            errorsMessage.append("Не правильно введено имя автора\n");
         }
-        if (publisherId == null) {
-            errorsMessage.append("Поле издательства не должно быть пустым\n");
+        if (author.getSurname() == null
+                || author.getSurname().isBlank() || !author.getSurname().matches(authorRegex)) {
+            errorsMessage.append("Не правильно введена фамилия автора\n");
+        }
+        if (author.getPatronymic() == null
+                || author.getPatronymic().isBlank() || !author.getPatronymic().matches(authorRegex)) {
+            errorsMessage.append("Не правильно введено отчество автора\n");
+        }
+
+        if (publisher.getName() == null || publisher.getName().isBlank()
+                || publisher.getName().length() < 3 || publisher.getName().length() > 255) {
+            errorsMessage.append("Не правильно введено название издателя\n");
+        }
+        if (publisher.getCity() == null || publisher.getCity().isBlank()
+                || publisher.getCity().length() < 3 || publisher.getCity().length() > 255) {
+            errorsMessage.append("Не правильно введен город издателя\n");
         }
 
         if (errorsMessage.length() > 0) {
@@ -86,7 +100,7 @@ public class ValidationUtils {
         }
     }
 
-   public static void validate(Object entity) throws ValidationException, ClassNotFoundException {
+    public static void validate(Object entity) throws ValidationException, ClassNotFoundException {
         if (entity instanceof Book) {
             validate((Book) entity);
         } else if (entity instanceof Author) {

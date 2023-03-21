@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 @Builder
 @EqualsAndHashCode(callSuper = true)
 public class Publisher extends Entity {
-    private Integer id;
     private String name;
     private String city;
 
@@ -24,7 +23,6 @@ public class Publisher extends Entity {
 
     public static Publisher getNullObject() {
         return Publisher.builder()
-                .id(null)
                 .name("")
                 .city("")
                 .build();

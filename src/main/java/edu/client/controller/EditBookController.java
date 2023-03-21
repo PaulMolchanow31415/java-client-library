@@ -67,7 +67,7 @@ public class EditBookController {
     @FXML
     private void handleSave() {
         try {
-            this.currentBook = assembleBook();
+            assembleBook();
             isSaveClicked = true;
             handleClose();
 
@@ -98,11 +98,11 @@ public class EditBookController {
         publisherNameField.setText(currentBook.getPublisher().getName());
         publisherCityField.setText(currentBook.getPublisher().getCity());
 
-        mainApp.getLibrary().getAuthorsData().forEach(authorComboBox.getItems()::add);
-        mainApp.getLibrary().getPublishersData().forEach(publisherComboBox.getItems()::add);
+        authorComboBox.setItems(mainApp.getLibrary().getAuthorsData());
+        publisherComboBox.setItems(mainApp.getLibrary().getPublishersData());
     }
 
-    private Book assembleBook() throws ValidationException {
+    private void assembleBook() throws ValidationException {
         Author assemblyAuthor = Author.builder()
                 .name(authorNameField.getText())
                 .surname(authorSurnameField.getText())
@@ -124,6 +124,12 @@ public class EditBookController {
                 .build();
 
         ValidationUtils.validate(assembly);
-        return assembly;
+
+        currentBook.setTitle(assembly.getTitle());
+        currentBook.setOrigin(assembly.getOrigin());
+        currentBook.setSection(assembly.getSection());
+        currentBook.setYearPub(assembly.getYearPub());
+        currentBook.setAuthor(assemblyAuthor);
+        currentBook.setPublisher(assemblyPublisher);
     }
 }

@@ -27,7 +27,7 @@ public class EditAuthorController {
     @FXML
     private void handleSave() {
         try {
-            this.currentAuthor = assembleAuthor();
+            assembleAuthor();
             isSaveClicked = true;
             handleClose();
 
@@ -49,7 +49,7 @@ public class EditAuthorController {
         patronymicField.setText(currentAuthor.getPatronymic());
     }
 
-    private Author assembleAuthor() throws ValidationException {
+    private void assembleAuthor() throws ValidationException {
         Author assembly = Author.builder()
                 .name(nameField.getText())
                 .surname(surnameField.getText())
@@ -57,6 +57,9 @@ public class EditAuthorController {
                 .build();
 
         ValidationUtils.validate(assembly);
-        return assembly;
+
+        currentAuthor.setName(assembly.getName());
+        currentAuthor.setSurname(assembly.getSurname());
+        currentAuthor.setPatronymic(assembly.getPatronymic());
     }
 }
