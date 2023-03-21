@@ -27,4 +27,9 @@ public class Publisher extends Entity {
                 .city("")
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return name + ' ' + city;
+    }
 }

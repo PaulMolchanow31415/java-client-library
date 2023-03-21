@@ -12,6 +12,6 @@ public abstract class AbstractClient<T extends Entity> implements Client<T> {
     }
 
     public void delete(Integer id) throws Exception {
-        httpClient.delete(API + "delete/", id);
+        httpClient.delete(API + "delete/?id=", id);
     }
 }

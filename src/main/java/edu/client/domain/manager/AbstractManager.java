@@ -16,7 +16,7 @@ public abstract class AbstractManager<E extends Entity> {
     public void add(E entity) throws Exception {
         int id = entityClient.save(entity);
         entity.setId(id);
-        entitiesData.add(id, entity);
+        entitiesData.add(entity);
     }
 
     public void remove(E entity) throws Exception {
@@ -26,6 +26,6 @@ public abstract class AbstractManager<E extends Entity> {
 
     public void edit(E entity) throws Exception {
         entityClient.update(entity);
-        entitiesData.set(entity.getId(), entity);
+        entitiesData.set(entity.getId() - 1, entity);
     }
 }

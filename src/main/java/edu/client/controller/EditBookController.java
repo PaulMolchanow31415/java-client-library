@@ -55,12 +55,19 @@ public class EditBookController {
             authorNameField.setText(selected.getName());
             authorSurnameField.setText(selected.getSurname());
             authorPatronymicField.setText(selected.getPatronymic());
+
+//            authorNameField.setEditable(false);
+//            authorSurnameField.setEditable(false);
+//            authorPatronymicField.setEditable(false);
         });
 
         publisherComboBox.setOnAction(event -> {
             Publisher selected = publisherComboBox.getValue();
             publisherNameField.setText(selected.getName());
             publisherCityField.setText(selected.getCity());
+
+//            publisherNameField.setEditable(false);
+//            publisherCityField.setEditable(false);
         });
     }
 
@@ -89,9 +96,9 @@ public class EditBookController {
         this.currentBook = bookObj;
 
         titleField.setText(currentBook.getTitle());
-        yearPubField.setText(currentBook.getYearPub());
-        sectionField.setText(currentBook.getSection());
         originTextArea.setText(currentBook.getOrigin());
+        sectionField.setText(currentBook.getSection());
+        yearPubField.setText(currentBook.getYearPub());
         authorNameField.setText(currentBook.getAuthor().getName());
         authorSurnameField.setText(currentBook.getAuthor().getSurname());
         authorPatronymicField.setText(currentBook.getAuthor().getPatronymic());

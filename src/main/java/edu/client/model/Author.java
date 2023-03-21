@@ -12,10 +12,6 @@ public class Author extends Entity {
     private String surname;
     private String patronymic;
 
-    public String getInitials() {
-        return surname + ' ' + name.charAt(0) + '.' + patronymic.charAt(0) + '.';
-    }
-
     @Override
     public Author clone() {
         try {
@@ -32,5 +28,17 @@ public class Author extends Entity {
                 .surname("")
                 .patronymic("")
                 .build();
+    }
+
+    public String getInitials() {
+        if (name != null && surname != null && patronymic != null) {
+            return surname + ' ' + name.charAt(0) + '.' + patronymic.charAt(0) + '.';
+        }
+        return "Данные автора не заполнены полностью";
+    }
+
+    @Override
+    public String toString() {
+        return name + ' ' + surname + ' ' + patronymic;
     }
 }

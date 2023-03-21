@@ -20,7 +20,6 @@ import javafx.stage.StageStyle;
 import lombok.Getter;
 
 public class MainApp extends Application {
-//    private final FXMLLoader loader = new FXMLLoader();
     private Stage primaryStage;
     @Getter
     private Library library;
@@ -98,7 +97,7 @@ public class MainApp extends Application {
     }
 
     /* MICRO AUTHOR / PUBLISHER DIALOGS */
-    public boolean showAuthorEditDialog(Author authorObj) {
+    public boolean showAuthorEditDialog(Author tempAuthorObj) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/authorEditor.fxml"));
@@ -107,7 +106,7 @@ public class MainApp extends Application {
             Stage editAuthorStage = createDialogStage(authorEditor);
             EditAuthorController authorController = loader.getController();
             authorController.setEditAuthorStage(editAuthorStage);
-            authorController.setFields(authorObj);
+            authorController.setFields(tempAuthorObj);
 
             editAuthorStage.showAndWait();
             return authorController.isSaveClicked();
@@ -118,7 +117,7 @@ public class MainApp extends Application {
         }
     }
 
-    public boolean showPublisherEditDialog(Publisher publisherObj) {
+    public boolean showPublisherEditDialog(Publisher tempPublisherObj) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/publisherEditor.fxml"));
@@ -127,7 +126,7 @@ public class MainApp extends Application {
             Stage editPublisherStage = createDialogStage(publisherEditor);
             EditPublisherController publisherController = loader.getController();
             publisherController.setEditPublisherStage(editPublisherStage);
-            publisherController.setFields(publisherObj);
+            publisherController.setFields(tempPublisherObj);
 
             editPublisherStage.showAndWait();
             return publisherController.isSaveClicked();

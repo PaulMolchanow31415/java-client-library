@@ -49,6 +49,10 @@
     -fx-table-header-border-color: transparent;
 }
 
+.table-view .corner {
+    -fx-background-color: transparent;
+}
+
 .table-view .column-header-background {
     -fx-background-color: secondary;
 }
@@ -90,6 +94,8 @@
 
 .table-row-cell:selected {
     -fx-border-color: acccent;
+    -fx-selection-bar: accent;
+    -fx-selection-bar-non-focused: transparent;
     -fx-text-fill: accent;
     -fx-background-insets: 0;
 }

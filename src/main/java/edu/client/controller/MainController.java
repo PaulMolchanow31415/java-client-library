@@ -94,7 +94,6 @@ public class MainController {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
 
         if (selectedBook != null) {
-            tableBooks.getItems().remove(selectedBook);
             mainApp.getLibrary().getBookManager().remove(selectedBook);
         } else {
             AlertUtils.showNothingIsSelectedAlert();
@@ -109,13 +108,13 @@ public class MainController {
             AlertUtils.showNothingIsSelectedAlert();
             return;
         }
-        Author selectedAuthor = selectedBook.getAuthor();
+        Author bookAuthor = selectedBook.getAuthor();
 
-        if (selectedAuthor != null) {
-            boolean isSaveClicked = mainApp.showAuthorEditDialog(selectedAuthor);
+        if (bookAuthor != null) {
+            boolean isSaveClicked = mainApp.showAuthorEditDialog(bookAuthor);
             if (isSaveClicked) {
                 showBookDetails(selectedBook);
-                mainApp.getLibrary().getAuthorManager().edit(selectedAuthor);
+                mainApp.getLibrary().getAuthorManager().edit(bookAuthor);
             }
         } else {
             AlertUtils.showNotExistingItemAlert();
@@ -178,6 +177,8 @@ public class MainController {
             selectedBook.setPublisher(null);
             tableBooks.getItems().set(index, selectedBook);
             mainApp.getLibrary().getPublisherManager().remove(selectedPublisher);
+            // new
+            showBookDetails(selectedBook);
         } else {
             AlertUtils.showNotExistingItemAlert();
         }
@@ -254,6 +255,7 @@ public class MainController {
             book.getPublisher().setName(null);
             book.getPublisher().setCity(null);
         }
+        System.out.println(book);
         return book;
     }
 }
