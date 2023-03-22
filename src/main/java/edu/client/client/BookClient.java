@@ -1,6 +1,5 @@
 package edu.client.client;
 
-import edu.client.dto.BookDto;
 import edu.client.model.Book;
 import edu.client.properties.AppProperties;
 
@@ -14,12 +13,10 @@ public class BookClient extends AbstractClient<Book> {
     }
 
     public Integer save(Book book) throws Exception {
-        BookDto dto = new BookDto(book);
-
         String response = httpClient.post(API + "add",
-                parser.serialize(dto, BookDto.class));
+                parser.serialize(book.getDtoInstance(), Book.class));
 
-        return parser.desirialize(response, BookDto.class).getId();
+        return parser.desirialize(response, Book.class).getId();
     }
 
     public List<Book> getAll() throws Exception {
@@ -29,6 +26,6 @@ public class BookClient extends AbstractClient<Book> {
 
     public void update(Book book) throws Exception {
         httpClient.put(API + "update",
-                parser.serialize(book, Book.class));
+                parser.serialize(book.getDtoInstance(), Book.class));
     }
 }

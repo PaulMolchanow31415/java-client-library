@@ -1,7 +1,6 @@
 package edu.client.domain.manager;
 
 import edu.client.client.Client;
-import edu.client.dto.BookDto;
 import edu.client.model.Book;
 import javafx.collections.ObservableList;
 

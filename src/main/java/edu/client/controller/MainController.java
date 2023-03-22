@@ -119,13 +119,13 @@ public class MainController {
         if (bookAuthor != null) {
             Book newBook = selectedBook.clone();
             Author newAuthor = bookAuthor.clone();
-            boolean isSaveClicked = mainApp.showAuthorEditDialog(/*modifies*/newAuthor);
+            boolean isUpdateClicked = mainApp.showAuthorEditDialog(/*modifies*/newAuthor);
 
-            if (isSaveClicked) {
+            if (isUpdateClicked) {
                 newBook.setAuthor(newAuthor);
                 mainApp.getLibrary().getAuthorManager().edit(bookAuthor, newAuthor);
                 mainApp.getLibrary().getBookManager().edit(selectedBook, newBook);
-                showBookDetails(selectedBook);
+                showBookDetails(newBook);
             }
         } else {
             AlertUtils.showNotExistingItemAlert();
@@ -147,13 +147,13 @@ public class MainController {
         if (bookPublisher != null) {
             Book newBook = selectedBook.clone();
             Publisher newPublisher = bookPublisher.clone();
-            boolean isSaveClicked = mainApp.showPublisherEditDialog(newPublisher);
+            boolean isUpdateClicked = mainApp.showPublisherEditDialog(newPublisher);
 
-            if (isSaveClicked) {
+            if (isUpdateClicked) {
                 newBook.setPublisher(newPublisher);
                 mainApp.getLibrary().getPublisherManager().edit(bookPublisher, newPublisher);
                 mainApp.getLibrary().getBookManager().edit(selectedBook, newBook);
-                showBookDetails(selectedBook);
+                showBookDetails(newBook);
             }
         } else {
             AlertUtils.showNotExistingItemAlert();
@@ -174,7 +174,10 @@ public class MainController {
 
         if (selectedAuthor != null) {
             mainApp.getLibrary().getAuthorManager().remove(selectedAuthor);
+            /* удаление автора у книги */
+            mainApp.getLibrary().getBookManager().remove(selectedAuthor);
             showBookDetails(selectedBook);
+            tableBooks.refresh();
         } else {
             AlertUtils.showNotExistingItemAlert();
         }
@@ -195,6 +198,7 @@ public class MainController {
         if (selectedPublisher != null) {
             mainApp.getLibrary().getPublisherManager().remove(selectedPublisher);
             showBookDetails(selectedBook);
+            tableBooks.refresh();
         } else {
             AlertUtils.showNotExistingItemAlert();
         }

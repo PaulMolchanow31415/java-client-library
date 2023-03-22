@@ -109,7 +109,7 @@ public class MainApp extends Application {
             authorController.setFields(tempAuthorObj);
 
             editAuthorStage.showAndWait();
-            return authorController.isSaveClicked();
+            return authorController.isUpdateClicked();
         } catch (Exception e) {
             AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class MainApp extends Application {
             publisherController.setFields(tempPublisherObj);
 
             editPublisherStage.showAndWait();
-            return publisherController.isSaveClicked();
+            return publisherController.isUpdateClicked();
         } catch (Exception e) {
             AlertUtils.showError(e.getMessage(), String.valueOf(e.getCause()));
             e.printStackTrace();

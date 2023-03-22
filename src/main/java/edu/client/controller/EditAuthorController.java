@@ -13,7 +13,7 @@ import lombok.Setter;
 public class EditAuthorController {
     private Author currentAuthor; // store link
     @Getter
-    private boolean isSaveClicked = false;
+    private boolean isUpdateClicked = false;
     @Setter
     private Stage editAuthorStage;
 
@@ -25,10 +25,10 @@ public class EditAuthorController {
     private TextField patronymicField;
 
     @FXML
-    private void handleSave() {
+    private void handleUpdate() {
         try {
             assembleAuthor();
-            isSaveClicked = true;
+            isUpdateClicked = true;
             handleClose();
 
         } catch (ValidationException e) {

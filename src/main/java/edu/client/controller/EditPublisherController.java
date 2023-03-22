@@ -13,7 +13,7 @@ import lombok.Setter;
 public class EditPublisherController {
     private Publisher currentPublisher; // store link
     @Getter
-    private boolean isSaveClicked = false;
+    private boolean isUpdateClicked = false;
     @Setter
     private Stage editPublisherStage;
 
@@ -23,10 +23,10 @@ public class EditPublisherController {
     private TextField cityField;
 
     @FXML
-    private void handleSave() {
+    private void handleUpdate() {
         try {
             assemblePublisher();
-            this.isSaveClicked = true;
+            this.isUpdateClicked = true;
             handleClose();
 
         } catch (ValidationException e) {

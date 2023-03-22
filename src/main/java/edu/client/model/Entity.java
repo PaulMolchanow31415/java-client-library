@@ -1,11 +1,12 @@
 package edu.client.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-
+@Getter
+@Setter
+@RequiredArgsConstructor
 public abstract class Entity {
-    @Getter
-    @Setter
     protected Integer id;
 }

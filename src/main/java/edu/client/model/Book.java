@@ -1,12 +1,16 @@
 package edu.client.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
 
 @Data
 @Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class Book extends Entity implements Cloneable {
     private String title; // название
     private String origin; // Происхождение книги
@@ -24,6 +28,20 @@ public class Book extends Entity implements Cloneable {
                 .author(Author.getNullObject())
                 .publisher(Publisher.getNullObject())
                 .build();
+    }
+
+    public Book getDtoInstance() {
+        Book b = this.clone();
+        Publisher p = b.getPublisher().clone();
+        Author a = b.getAuthor().clone();
+        Publisher outP = new Publisher();
+        Author outA = new Author();
+
+        outP.setId(p.getId());
+        outA.setId(a.getId());
+        b.setAuthor(outA);
+        b.setPublisher(outP);
+        return b;
     }
 
     @Override

@@ -84,8 +84,8 @@
                 </GridPane>
                 <HBox alignment="TOP_RIGHT" spacing="16.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#handleSave" styleClass="button-add"
-                                text="Сохранить"/>
+                        <Button mnemonicParsing="false" onAction="#handleUpdate" styleClass="button-add"
+                                text="Обновить"/>
                         <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#handleClose"
                                 styleClass="button-edit" text="Закрыть"/>
                     </children>
