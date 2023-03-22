@@ -5,8 +5,8 @@ import edu.client.model.Entity;
 import javafx.collections.ObservableList;
 
 public abstract class AbstractManager<E extends Entity> {
-    private final ObservableList<E> entitiesData;
-    private final Client<E> entityClient;
+    protected final ObservableList<E> entitiesData;
+    protected final Client<E> entityClient;
 
     public AbstractManager(ObservableList<E> entitiesData, Client<E> entityClient) {
         this.entitiesData = entitiesData;
@@ -24,8 +24,9 @@ public abstract class AbstractManager<E extends Entity> {
         entitiesData.remove(entity);
     }
 
-    public void edit(E entity) throws Exception {
-        entityClient.update(entity);
-        entitiesData.set(entity.getId() - 1, entity);
+    public void edit(E oldEntity, E newEntity) throws Exception {
+        entityClient.update(newEntity);
+        int index = entitiesData.indexOf(oldEntity);
+        entitiesData.set(index, newEntity);
     }
 }

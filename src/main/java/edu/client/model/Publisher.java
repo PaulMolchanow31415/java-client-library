@@ -2,24 +2,14 @@ package edu.client.model;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+
+import java.util.Objects;
 
 @Data
 @Builder
-@EqualsAndHashCode(callSuper = true)
-public class Publisher extends Entity {
+public class Publisher extends Entity implements Cloneable {
     private String name;
     private String city;
-
-    @Override
-    public Publisher clone() {
-        try {
-            return (Publisher) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return getNullObject();
-    }
 
     public static Publisher getNullObject() {
         return Publisher.builder()
@@ -31,5 +21,27 @@ public class Publisher extends Entity {
     @Override
     public String toString() {
         return name + ' ' + city;
+    }
+
+    @Override
+    public Publisher clone() {
+        try {
+            return (Publisher) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Publisher publisher)) return false;
+        return Objects.equals(name, publisher.name)
+                && Objects.equals(city, publisher.city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, city);
     }
 }

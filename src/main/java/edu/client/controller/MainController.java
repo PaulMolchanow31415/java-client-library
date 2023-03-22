@@ -16,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 public class MainController {
     @Setter
@@ -61,14 +62,14 @@ public class MainController {
     @FXML
     private void handleAddBook() throws Exception {
         Book tempBook = Book.getNullObject();
+        boolean isSaveClicked = mainApp.showBookEditDialog(/*modifies*/tempBook);
 
-        boolean isSaveClicked = mainApp.showBookEditDialog(tempBook);
         if (isSaveClicked) {
-            showBookDetails(tempBook);
             /* set book id and save */
             mainApp.getLibrary().getPublisherManager().add(tempBook.getPublisher());
             mainApp.getLibrary().getAuthorManager().add(tempBook.getAuthor());
-            mainApp.getLibrary().getBookManager().add(minifyData(tempBook));
+            mainApp.getLibrary().getBookManager().add(tempBook);
+            showBookDetails(tempBook);
         }
     }
 
@@ -77,12 +78,16 @@ public class MainController {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
 
         if (selectedBook != null) {
-            boolean isSaveClicked = mainApp.showBookEditDialog(selectedBook);
+            Book newBook = selectedBook.clone();
+            Author newAuthor = selectedBook.getAuthor().clone();
+            Publisher newPublisher = selectedBook.getPublisher().clone();
+            boolean isSaveClicked = mainApp.showBookEditDialog(/*modifies*/newBook);
+
             if (isSaveClicked) {
-                showBookDetails(selectedBook);
-                mainApp.getLibrary().getPublisherManager().edit(selectedBook.getPublisher());
-                mainApp.getLibrary().getAuthorManager().edit(selectedBook.getAuthor());
-                mainApp.getLibrary().getBookManager().edit(selectedBook);
+                mainApp.getLibrary().getPublisherManager().edit(selectedBook.getPublisher(), newPublisher);
+                mainApp.getLibrary().getAuthorManager().edit(selectedBook.getAuthor(), newAuthor);
+                mainApp.getLibrary().getBookManager().edit(selectedBook, newBook);
+                showBookDetails(newBook);
             }
         } else {
             AlertUtils.showNothingIsSelectedAlert();
@@ -103,18 +108,22 @@ public class MainController {
     @FXML
     private void handleEditAuthor() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+        Author bookAuthor;
 
         if (selectedBook == null) {
             AlertUtils.showNothingIsSelectedAlert();
             return;
+        } else {
+            bookAuthor = selectedBook.getAuthor();
         }
-        Author bookAuthor = selectedBook.getAuthor();
 
         if (bookAuthor != null) {
-            boolean isSaveClicked = mainApp.showAuthorEditDialog(bookAuthor);
+            Author newAuthor = bookAuthor.clone();
+            boolean isSaveClicked = mainApp.showAuthorEditDialog(/*modifies*/newAuthor);
+
             if (isSaveClicked) {
+                mainApp.getLibrary().getAuthorManager().edit(bookAuthor, newAuthor);
                 showBookDetails(selectedBook);
-                mainApp.getLibrary().getAuthorManager().edit(bookAuthor);
             }
         } else {
             AlertUtils.showNotExistingItemAlert();
@@ -124,18 +133,22 @@ public class MainController {
     @FXML
     private void handleEditPublisher() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+        Publisher bookPublisher;
 
         if (selectedBook == null) {
             AlertUtils.showNothingIsSelectedAlert();
             return;
+        } else {
+            bookPublisher = selectedBook.getPublisher();
         }
-        Publisher selectedPublisher = selectedBook.getPublisher();
 
-        if (selectedPublisher != null) {
-            boolean isSaveClicked = mainApp.showPublisherEditDialog(selectedPublisher);
+        if (bookPublisher != null) {
+            Publisher newPublisher = bookPublisher.clone();
+            boolean isSaveClicked = mainApp.showPublisherEditDialog(newPublisher);
+
             if (isSaveClicked) {
+                mainApp.getLibrary().getPublisherManager().edit(bookPublisher, newPublisher);
                 showBookDetails(selectedBook);
-                mainApp.getLibrary().getPublisherManager().edit(selectedPublisher);
             }
         } else {
             AlertUtils.showNotExistingItemAlert();
@@ -145,18 +158,18 @@ public class MainController {
     @FXML
     private void handleDeleteAuthor() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+        Author selectedAuthor;
 
         if (selectedBook == null) {
             AlertUtils.showNothingIsSelectedAlert();
             return;
+        } else {
+            selectedAuthor = selectedBook.getAuthor();
         }
-        int index = tableBooks.getSelectionModel().getSelectedIndex();
-        Author selectedAuthor = selectedBook.getAuthor();
 
         if (selectedAuthor != null) {
-            selectedBook.setAuthor(null);
-            tableBooks.getItems().set(index, selectedBook);
             mainApp.getLibrary().getAuthorManager().remove(selectedAuthor);
+            showBookDetails(selectedBook);
         } else {
             AlertUtils.showNotExistingItemAlert();
         }
@@ -165,19 +178,17 @@ public class MainController {
     @FXML
     private void handleDeletePublisher() throws Exception {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
+        Publisher selectedPublisher;
 
         if (selectedBook == null) {
             AlertUtils.showNothingIsSelectedAlert();
             return;
+        } else {
+            selectedPublisher = selectedBook.getPublisher();
         }
-        int index = tableBooks.getSelectionModel().getSelectedIndex();
-        Publisher selectedPublisher = selectedBook.getPublisher();
 
         if (selectedPublisher != null) {
-            selectedBook.setPublisher(null);
-            tableBooks.getItems().set(index, selectedBook);
             mainApp.getLibrary().getPublisherManager().remove(selectedPublisher);
-            // new
             showBookDetails(selectedBook);
         } else {
             AlertUtils.showNotExistingItemAlert();
@@ -245,17 +256,5 @@ public class MainController {
             sectionLabel.setText("");
             originLabel.setText("");
         }
-    }
-
-    public Book minifyData(Book book) {
-        if (book != null) {
-            book.getAuthor().setName(null);
-            book.getAuthor().setSurname(null);
-            book.getAuthor().setPatronymic(null);
-            book.getPublisher().setName(null);
-            book.getPublisher().setCity(null);
-        }
-        System.out.println(book);
-        return book;
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public class JsonParser<E extends Entity> {
     public static final Gson gson = new Gson();
 
-    public List<E> serializeToArray(String jsonString, Class<E> eClass) {
+    public List<E> serializeToList(String jsonString, Class<E> eClass) {
         List<E> entities = new ArrayList<>();
         JsonObject base = gson.fromJson(jsonString, JsonObject.class);
         JsonArray dataArray = base.getAsJsonArray("data");
@@ -26,6 +26,9 @@ public class JsonParser<E extends Entity> {
 
     public E desirialize(String jsonString, Class<E> eClass) {
         JsonObject base = gson.fromJson(jsonString, JsonObject.class);
+
+        System.out.println(base);
+
         return gson.fromJson(base.get("data"), eClass);
     }
 

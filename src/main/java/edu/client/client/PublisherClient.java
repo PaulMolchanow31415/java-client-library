@@ -14,7 +14,7 @@ public class PublisherClient extends AbstractClient<Publisher> {
 
     public List<Publisher> getAll() throws Exception {
         String response = httpClient.get(API_PATH, "all");
-        return parser.serializeToArray(response, Publisher.class);
+        return parser.serializeToList(response, Publisher.class);
     }
 
     public Integer save(Publisher publisher) throws Exception {

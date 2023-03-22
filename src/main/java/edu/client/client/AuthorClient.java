@@ -14,7 +14,7 @@ public class AuthorClient extends AbstractClient<Author> {
 
     public List<Author> getAll() throws Exception {
         String response = httpClient.get(API, "all");
-        return parser.serializeToArray(response, Author.class);
+        return parser.serializeToList(response, Author.class);
     }
 
     public Integer save(Author author) throws Exception {

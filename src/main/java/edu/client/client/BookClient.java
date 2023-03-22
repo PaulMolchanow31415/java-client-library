@@ -16,14 +16,12 @@ public class BookClient extends AbstractClient<Book> {
         String response = httpClient.post(API + "add",
                 parser.serialize(book, Book.class));
 
-        System.out.println(book);
-
         return parser.desirialize(response, Book.class).getId();
     }
 
     public List<Book> getAll() throws Exception {
         String response = httpClient.get(API_PATH, "all");
-        return parser.serializeToArray(response, Book.class);
+        return parser.serializeToList(response, Book.class);
     }
 
     public void update(Book book) throws Exception {

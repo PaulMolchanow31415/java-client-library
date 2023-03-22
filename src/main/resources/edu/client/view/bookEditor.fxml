@@ -82,7 +82,7 @@
                         <HBox alignment="CENTER_LEFT" spacing="6.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <children>
                                 <ComboBox fx:id="authorComboBox" minWidth="-Infinity" prefWidth="100.0"
-                                          promptText="Выберите из списка" visibleRowCount="15" HBox.hgrow="NEVER"/>
+                                          promptText="Выберите из списка" visibleRowCount="12" HBox.hgrow="NEVER"/>
                                 <TextField fx:id="authorNameField" promptText="Имя" styleClass="edit__input">
                                     <font>
                                         <Font name="Arial" size="12.0"/>
@@ -106,7 +106,7 @@
                               GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <children>
                                 <ComboBox fx:id="publisherComboBox" minWidth="-Infinity" prefWidth="100.0"
-                                          promptText="Выберите из списка" visibleRowCount="15"/>
+                                          promptText="Выберите из списка" visibleRowCount="12"/>
                                 <TextField fx:id="publisherNameField" promptText="Название" styleClass="edit__input">
                                     <font>
                                         <Font name="Arial" size="12.0"/>

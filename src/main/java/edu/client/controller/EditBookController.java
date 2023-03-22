@@ -57,6 +57,7 @@ public class EditBookController {
             authorPatronymicField.setText(selected.getPatronymic());
 
 //            authorNameField.setEditable(false);
+//            authorNameField.setDisable(true); // fixme
 //            authorSurnameField.setEditable(false);
 //            authorPatronymicField.setEditable(false);
         });
