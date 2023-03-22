@@ -2,11 +2,13 @@ package edu.client.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Objects;
 
 @Data
 @Builder
+@RequiredArgsConstructor
 public class Author extends Entity implements Cloneable {
     private String name;
     private String surname;

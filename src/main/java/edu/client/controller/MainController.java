@@ -16,7 +16,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Setter;
-import org.jetbrains.annotations.NotNull;
 
 public class MainController {
     @Setter
@@ -118,11 +117,14 @@ public class MainController {
         }
 
         if (bookAuthor != null) {
+            Book newBook = selectedBook.clone();
             Author newAuthor = bookAuthor.clone();
             boolean isSaveClicked = mainApp.showAuthorEditDialog(/*modifies*/newAuthor);
 
             if (isSaveClicked) {
+                newBook.setAuthor(newAuthor);
                 mainApp.getLibrary().getAuthorManager().edit(bookAuthor, newAuthor);
+                mainApp.getLibrary().getBookManager().edit(selectedBook, newBook);
                 showBookDetails(selectedBook);
             }
         } else {
@@ -143,11 +145,14 @@ public class MainController {
         }
 
         if (bookPublisher != null) {
+            Book newBook = selectedBook.clone();
             Publisher newPublisher = bookPublisher.clone();
             boolean isSaveClicked = mainApp.showPublisherEditDialog(newPublisher);
 
             if (isSaveClicked) {
+                newBook.setPublisher(newPublisher);
                 mainApp.getLibrary().getPublisherManager().edit(bookPublisher, newPublisher);
+                mainApp.getLibrary().getBookManager().edit(selectedBook, newBook);
                 showBookDetails(selectedBook);
             }
         } else {
