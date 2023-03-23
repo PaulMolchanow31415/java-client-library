@@ -126,6 +126,7 @@ public class MainController {
                 mainApp.getLibrary().getAuthorManager().edit(bookAuthor, newAuthor);
                 mainApp.getLibrary().getBookManager().edit(selectedBook, newBook);
                 showBookDetails(newBook);
+                tableBooks.refresh();
             }
         } else {
             AlertUtils.showNotExistingItemAlert();
@@ -154,6 +155,7 @@ public class MainController {
                 mainApp.getLibrary().getPublisherManager().edit(bookPublisher, newPublisher);
                 mainApp.getLibrary().getBookManager().edit(selectedBook, newBook);
                 showBookDetails(newBook);
+                tableBooks.refresh();
             }
         } else {
             AlertUtils.showNotExistingItemAlert();
@@ -173,9 +175,8 @@ public class MainController {
         }
 
         if (selectedAuthor != null) {
-            mainApp.getLibrary().getAuthorManager().remove(selectedAuthor);
             /* удаление автора у книги */
-            mainApp.getLibrary().getBookManager().remove(selectedAuthor);
+            mainApp.getLibrary().getAuthorManager().remove(selectedAuthor);
             showBookDetails(selectedBook);
             tableBooks.refresh();
         } else {

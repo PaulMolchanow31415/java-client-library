@@ -25,10 +25,13 @@ public class Author extends Entity implements Cloneable {
     }
 
     public String getInitials() {
-        if (name != null && surname != null && patronymic != null) {
+        if (name != null && !name.isEmpty() && !name.isBlank()
+                && surname != null && !surname.isEmpty() && !surname.isBlank()
+                && patronymic != null && !patronymic.isEmpty() && !patronymic.isBlank()) {
+
             return surname + ' ' + name.charAt(0) + '.' + patronymic.charAt(0) + '.';
         }
-        return "Данные автора не заполнены";
+        return "Пусто";
     }
 
     @Override

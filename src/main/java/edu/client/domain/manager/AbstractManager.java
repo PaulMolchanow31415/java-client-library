@@ -3,6 +3,7 @@ package edu.client.domain.manager;
 import edu.client.client.Client;
 import edu.client.model.Entity;
 import javafx.collections.ObservableList;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractManager<E extends Entity> {
     protected final ObservableList<E> entitiesData;
@@ -19,12 +20,12 @@ public abstract class AbstractManager<E extends Entity> {
         entitiesData.add(entity);
     }
 
-    public void remove(E entity) throws Exception {
+    public void remove(@NotNull E entity) throws Exception {
         entityClient.delete(entity.getId());
         entitiesData.remove(entity);
     }
 
-    public void edit(E oldEntity, E newEntity) throws Exception {
+    public void edit(E oldEntity, @NotNull E newEntity) throws Exception {
         entityClient.update(newEntity);
         int index = entitiesData.indexOf(oldEntity);
         entitiesData.set(index, newEntity);
