@@ -21,8 +21,8 @@ public class LibraryFacade implements Library {
     private static final Client<Author> authorClient = new AuthorClient();
     private static final Client<Publisher> publisherClient = new PublisherClient();
     private static final BookManager bookManager = new BookManager(booksData, bookClient);
-    private static final AuthorManager authorManager = new AuthorManager(authorsData, authorClient, booksData);
-    private static final PublisherManager publisherManager = new PublisherManager(publishersData, publisherClient, booksData);
+    private static final AuthorManager authorManager = new AuthorManager(authorsData, authorClient);
+    private static final PublisherManager publisherManager = new PublisherManager(publishersData, publisherClient);
 
     public LibraryFacade() throws Exception {
         booksData.addAll(bookClient.getAll());

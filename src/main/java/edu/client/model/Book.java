@@ -5,52 +5,35 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Data
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Book extends Entity implements Cloneable {
-    private String title; // название
-    private String origin; // Происхождение книги
-    private String section; // Раздел библиотеки (специальная литература, хобби, беллетристика и так далее)
-    private String yearPub; // Год издания
+public class Book implements Serializable, Entity {
+    private Integer id;
+    private String title;
+    private String origin;
+    private String section;
+    private String yearPub;
     private Author author;
     private Publisher publisher;
 
-    public static Book getNullObject() {
+    public Book getNullObject() {
+        if (author == null) author = new Author();
+        if (publisher == null) publisher = new Publisher();
+
         return Book.builder()
+                .id(this.id)
                 .title("")
                 .origin("")
                 .section("")
                 .yearPub("")
-                .author(Author.getNullObject())
-                .publisher(Publisher.getNullObject())
+                .author(this.author.getNullObject())
+                .publisher(this.publisher.getNullObject())
                 .build();
-    }
-
-    public Book getDtoInstance() {
-        Book b = this.clone();
-        Publisher p = b.getPublisher().clone();
-        Author a = b.getAuthor().clone();
-        Publisher outP = new Publisher();
-        Author outA = new Author();
-
-        outP.setId(p.getId());
-        outA.setId(a.getId());
-        b.setAuthor(outA);
-        b.setPublisher(outP);
-        return b;
-    }
-
-    @Override
-    public Book clone() {
-        try {
-            return (Book) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 
     @Override

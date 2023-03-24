@@ -139,7 +139,8 @@
                                         <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                             <children>
                                                 <Label fx:id="authorLabel" prefWidth="5000.0" text="..."/>
-                                                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                                <Button fx:id="authorEditButton"
+                                                        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
                                                         minWidth="-Infinity" mnemonicParsing="false"
                                                         onAction="#handleEditAuthor" styleClass="button-menu">
                                                     <graphic>
@@ -153,7 +154,8 @@
                                                         <Insets right="6.0"/>
                                                     </HBox.margin>
                                                 </Button>
-                                                <Button layoutX="21.0" layoutY="11.0" maxHeight="-Infinity"
+                                                <Button fx:id="authorDeleteButton"
+                                                        layoutX="21.0" layoutY="11.0" maxHeight="-Infinity"
                                                         maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
                                                         mnemonicParsing="false" onAction="#handleDeleteAuthor"
                                                         styleClass="button-menu">
@@ -171,7 +173,8 @@
                                               GridPane.columnIndex="1" GridPane.rowIndex="3">
                                             <children>
                                                 <Label fx:id="publisherLabel" prefWidth="5000.0" text="..."/>
-                                                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                                <Button fx:id="publisherEditButton"
+                                                        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
                                                         minWidth="-Infinity" mnemonicParsing="false"
                                                         onAction="#handleEditPublisher" styleClass="button-menu">
                                                     <graphic>
@@ -185,7 +188,8 @@
                                                         <Insets right="6.0"/>
                                                     </HBox.margin>
                                                 </Button>
-                                                <Button layoutX="21.0" layoutY="11.0" maxHeight="-Infinity"
+                                                <Button fx:id="publisherDeleteButton"
+                                                        layoutX="21.0" layoutY="11.0" maxHeight="-Infinity"
                                                         maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
                                                         mnemonicParsing="false" onAction="#handleDeletePublisher"
                                                         styleClass="button-menu">

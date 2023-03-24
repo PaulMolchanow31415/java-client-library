@@ -1,12 +1,7 @@
 package edu.client.model;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+public interface Entity {
+    Integer getId();
 
-@Getter
-@Setter
-@RequiredArgsConstructor
-public abstract class Entity {
-    protected Integer id;
+    void setId(Integer id);
 }

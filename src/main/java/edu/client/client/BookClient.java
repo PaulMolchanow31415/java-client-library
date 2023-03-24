@@ -2,6 +2,7 @@ package edu.client.client;
 
 import edu.client.model.Book;
 import edu.client.properties.AppProperties;
+import edu.client.utils.DtoConverter;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class BookClient extends AbstractClient<Book> {
 
     public Integer save(Book book) throws Exception {
         String response = httpClient.post(API + "add",
-                parser.serialize(book.getDtoInstance(), Book.class));
+                parser.serialize(DtoConverter.getDtoInstance(book), Book.class));
 
         return parser.desirialize(response, Book.class).getId();
     }
@@ -26,6 +27,6 @@ public class BookClient extends AbstractClient<Book> {
 
     public void update(Book book) throws Exception {
         httpClient.put(API + "update",
-                parser.serialize(book.getDtoInstance(), Book.class));
+                parser.serialize(DtoConverter.getDtoInstance(book), Book.class));
     }
 }

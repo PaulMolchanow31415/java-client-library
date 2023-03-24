@@ -5,35 +5,36 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Data
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Publisher extends Entity implements Cloneable {
+public class Publisher implements Serializable, Entity {
+    private Integer id;
     private String name;
     private String city;
 
-    public static Publisher getNullObject() {
+    public Publisher getNullObject() {
         return Publisher.builder()
+                .id(this.id)
                 .name("")
                 .city("")
                 .build();
     }
 
-    @Override
-    public String toString() {
-        return name + ' ' + city;
+    public String getLabeling() {
+        if (name != null && !name.isBlank() && !name.isEmpty()) {
+            return name;
+        }
+        return "Пусто";
     }
 
     @Override
-    public Publisher clone() {
-        try {
-            return (Publisher) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public String toString() {
+        return name + ' ' + city;
     }
 
     @Override

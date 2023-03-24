@@ -5,19 +5,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Data
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Author extends Entity implements Cloneable {
+public class Author implements Serializable, Entity {
+    private Integer id;
     private String name;
     private String surname;
     private String patronymic;
 
-    public static Author getNullObject() {
+    public Author getNullObject() {
         return Author.builder()
+                .id(this.id)
                 .name("")
                 .surname("")
                 .patronymic("")
@@ -37,15 +40,6 @@ public class Author extends Entity implements Cloneable {
     @Override
     public String toString() {
         return name + ' ' + surname + ' ' + patronymic;
-    }
-
-    @Override
-    public Author clone() {
-        try {
-            return (Author) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
     }
 
     @Override

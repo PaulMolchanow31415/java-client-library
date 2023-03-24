@@ -14,7 +14,7 @@ public abstract class AbstractManager<E extends Entity> {
         this.entityClient = entityClient;
     }
 
-    public void add(E entity) throws Exception {
+    public void add(@NotNull E entity) throws Exception {
         int id = entityClient.save(entity);
         entity.setId(id);
         entitiesData.add(entity);
@@ -28,6 +28,10 @@ public abstract class AbstractManager<E extends Entity> {
     public void edit(E oldEntity, @NotNull E newEntity) throws Exception {
         entityClient.update(newEntity);
         int index = entitiesData.indexOf(oldEntity);
-        entitiesData.set(index, newEntity);
+        if (index >= 0) {
+            entitiesData.set(index, newEntity);
+        } else {
+            entitiesData.add(newEntity);
+        }
     }
 }
