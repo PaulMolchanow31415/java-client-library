@@ -11,18 +11,20 @@ public class BookManager extends AbstractManager<Book> {
         super(booksData, bookClient);
     }
 
-    public void editAuthor(Author oldAuthor, Author newAuthor) {
+    public void editAuthor(Author oldAuthor, Author newAuthor) throws Exception {
         for (Book book : entitiesData) {
             if (book.getAuthor().equals(oldAuthor)) {
                 book.setAuthor(newAuthor);
+                entityClient.update(book);
             }
         }
     }
 
-    public void editPublisher(Publisher oldPublisher, Publisher newPublisher) {
+    public void editPublisher(Publisher oldPublisher, Publisher newPublisher) throws Exception {
         for (Book book : entitiesData) {
             if (book.getPublisher().equals(oldPublisher)) {
                 book.setPublisher(newPublisher);
+                entityClient.update(book);
             }
         }
     }

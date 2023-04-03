@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
@@ -8,6 +8,7 @@
 <AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="content" stylesheets="@../css/MainTheme.css"
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="edu.client.controller.MainController">
+
     <children>
         <SplitPane dividerPositions="0.5438888888888889" maxHeight="1.7976931348623157E308"
                    maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
@@ -31,32 +32,7 @@
                                                      text="Издатель"/>
                                     </columns>
                                 </TableView>
-                                <HBox prefHeight="100.0" prefWidth="Infinity">
-                                    <children>
-                                        <Button mnemonicParsing="false" styleClass="search-btn">
-                                            <graphic>
-                                                <SVGPath
-                                                        content="M15.1329 16.4612L9.91147 11.2323C9.44527 11.6058 8.90914 11.9015 8.30308 12.1193C7.69702 12.3372 7.05211 12.4461 6.36835 12.4461C4.67448 12.4461 3.24107 11.8585 2.06811 10.6833C0.895152 9.50801 0.308361 8.07255 0.307739 6.37691C0.307739 4.68063 0.89453 3.24518 2.06811 2.07056C3.24169 0.895926 4.67511 0.308301 6.36835 0.307678C8.06221 0.307678 9.49562 0.895304 10.6686 2.07056C11.8415 3.24581 12.4283 4.68126 12.429 6.37691C12.429 7.06164 12.3202 7.70747 12.1026 8.31439C11.8851 8.92131 11.5898 9.45821 11.2168 9.92507L16.4616 15.1773C16.6325 15.3485 16.718 15.5586 16.718 15.8076C16.718 16.0565 16.6248 16.2744 16.4383 16.4612C16.2673 16.6323 16.0498 16.7179 15.7856 16.7179C15.5214 16.7179 15.3039 16.6323 15.1329 16.4612ZM6.36835 10.5787C7.53385 10.5787 8.52468 10.17 9.34084 9.35269C10.157 8.53537 10.5648 7.54344 10.5641 6.37691C10.5641 5.20975 10.1561 4.21751 9.33991 3.40018C8.52375 2.58286 7.53323 2.17451 6.36835 2.17513C5.20284 2.17513 4.21201 2.58379 3.39585 3.40112C2.57969 4.21844 2.17192 5.21037 2.17254 6.37691C2.17254 7.54406 2.58062 8.53631 3.39678 9.35363C4.21295 10.1709 5.20347 10.5793 6.36835 10.5787Z"
-                                                        styleClass="svg"/>
-                                            </graphic>
-                                        </Button>
-                                        <TextField fx:id="filterBookField" promptText="Что вы хотите найти ?"
-                                                   styleClass="search-box">
-                                            <font>
-                                                <Font name="Arial" size="12.0"/>
-                                            </font>
-                                            <opaqueInsets>
-                                                <Insets/>
-                                            </opaqueInsets>
-                                            <padding>
-                                                <Insets bottom="13.0" left="10.0" right="61.0" top="13.0"/>
-                                            </padding>
-                                        </TextField>
-                                    </children>
-                                    <padding>
-                                        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
-                                    </padding>
-                                </HBox>
+                                <fx:include source="searchBox.fxml" fx:id="searchBoxController"/>
                             </children>
                         </VBox>
                     </children>

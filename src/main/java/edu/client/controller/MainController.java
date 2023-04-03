@@ -1,6 +1,7 @@
 package edu.client.controller;
 
 import edu.client.MainApp;
+import edu.client.domain.Library;
 import edu.client.model.Author;
 import edu.client.model.Book;
 import edu.client.model.Publisher;
@@ -17,6 +18,8 @@ import org.apache.commons.lang3.SerializationUtils;
 
 public class MainController {
     @Setter
+    private Library library;
+    @Setter
     private MainApp mainApp;
     /* LEFT PANEL */
     @FXML
@@ -27,8 +30,6 @@ public class MainController {
     private TableColumn<Book, String> authorInitialsColumn;
     @FXML
     private TableColumn<Book, String> publisherNameColumn;
-    @FXML
-    private TextField filterBookField;
     /* DETAILS */
     @FXML
     private Label titleLabel;
@@ -50,6 +51,8 @@ public class MainController {
     private Button publisherEditButton;
     @FXML
     private Button publisherDeleteButton;
+    @FXML
+    private SearchBoxController searchBoxController;
 
     @FXML
     private void initialize() {
@@ -70,9 +73,9 @@ public class MainController {
 
         if (isSaveClicked) {
             /* set book id and save */
-            mainApp.getLibrary().getPublisherManager().add(tempBook.getPublisher());
-            mainApp.getLibrary().getAuthorManager().add(tempBook.getAuthor());
-            mainApp.getLibrary().getBookManager().add(tempBook);
+            library.getPublisherManager().add(tempBook.getPublisher());
+            library.getAuthorManager().add(tempBook.getAuthor());
+            library.getBookManager().add(tempBook);
             showBookDetails(tempBook);
         }
     }
@@ -86,9 +89,9 @@ public class MainController {
             boolean isSaveClicked = mainApp.showBookEditDialog(newBook);
 
             if (isSaveClicked) {
-                mainApp.getLibrary().getPublisherManager().edit(selectedBook.getPublisher(), newBook.getPublisher());
-                mainApp.getLibrary().getAuthorManager().edit(selectedBook.getAuthor(), newBook.getAuthor());
-                mainApp.getLibrary().getBookManager().edit(selectedBook, newBook);
+                library.getPublisherManager().edit(selectedBook.getPublisher(), newBook.getPublisher());
+                library.getAuthorManager().edit(selectedBook.getAuthor(), newBook.getAuthor());
+                library.getBookManager().edit(selectedBook, newBook);
                 showBookDetails(newBook);
                 enableDetailButtons();
             }
@@ -102,7 +105,7 @@ public class MainController {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
 
         if (selectedBook != null) {
-            mainApp.getLibrary().getBookManager().remove(selectedBook);
+            library.getBookManager().remove(selectedBook);
         } else {
             AlertUtils.showNothingIsSelectedAlert();
         }
@@ -125,8 +128,8 @@ public class MainController {
             boolean isUpdateClicked = mainApp.showAuthorEditDialog(newAuthor);
 
             if (isUpdateClicked) {
-                mainApp.getLibrary().getAuthorManager().edit(bookAuthor, newAuthor);
-                mainApp.getLibrary().getBookManager().editAuthor(bookAuthor, newAuthor);
+                library.getAuthorManager().edit(bookAuthor, newAuthor);
+                library.getBookManager().editAuthor(bookAuthor, newAuthor);
                 showBookDetails(selectedBook);
                 tableBooks.refresh();
             }
@@ -152,8 +155,8 @@ public class MainController {
             boolean isUpdateClicked = mainApp.showPublisherEditDialog(newPublisher);
 
             if (isUpdateClicked) {
-                mainApp.getLibrary().getPublisherManager().edit(bookPublisher, newPublisher);
-                mainApp.getLibrary().getBookManager().editPublisher(bookPublisher, newPublisher);
+                library.getPublisherManager().edit(bookPublisher, newPublisher);
+                library.getBookManager().editPublisher(bookPublisher, newPublisher);
                 showBookDetails(selectedBook);
                 tableBooks.refresh();
             }
@@ -175,8 +178,8 @@ public class MainController {
         }
 
         if (selectedAuthor != null) {
-            mainApp.getLibrary().getAuthorManager().remove(selectedAuthor);
-            mainApp.getLibrary().getBookManager().removeAuthor(selectedAuthor);
+            library.getAuthorManager().remove(selectedAuthor);
+            library.getBookManager().removeAuthor(selectedAuthor);
             showBookDetails(selectedBook);
             disableAuthorDetailButtons();
             tableBooks.refresh();
@@ -246,36 +249,9 @@ public class MainController {
         FilteredList<Book> filteredBooksData
                 = new FilteredList<>(mainApp.getLibrary().getBooksData(), predicate -> true);
 
-        filterBookField.textProperty().addListener((observable, oldValue, newValue) ->
-                filteredBooksData.setPredicate(book -> {
-                    if (newValue == null || newValue.isEmpty()) return true;
-                    String lowerCaseFilter = newValue.toLowerCase();
-                    return comparisonBookFields(book, lowerCaseFilter);
-                }));
-
-        SortedList<Book> sortedBooksData = new SortedList<>(filteredBooksData);
+        SortedList<Book> sortedBooksData = searchBoxController.createFilteredBooks(filteredBooksData);
         sortedBooksData.comparatorProperty().bind(tableBooks.comparatorProperty());
 
         tableBooks.setItems(sortedBooksData);
-    }
-
-    public boolean comparisonBookFields(Book book, String lowerCaseFilter) {
-        if (book.getTitle().toLowerCase().contains(lowerCaseFilter)) return true;
-
-        else if (book.getSection().toLowerCase().contains(lowerCaseFilter)) return true;
-
-        else if (book.getYearPub().toLowerCase().contains(lowerCaseFilter)) return true;
-
-        else if (book.getOrigin().toLowerCase().contains(lowerCaseFilter)) return true;
-
-        else if (book.getAuthor().getName().toLowerCase().contains(lowerCaseFilter)) return true;
-
-        else if (book.getAuthor().getSurname().toLowerCase().contains(lowerCaseFilter)) return true;
-
-        else if (book.getAuthor().getPatronymic().toLowerCase().contains(lowerCaseFilter)) return true;
-
-        else if (book.getPublisher().getName().toLowerCase().contains(lowerCaseFilter)) return true;
-
-        else return book.getPublisher().getCity().toLowerCase().contains(lowerCaseFilter);
     }
 }

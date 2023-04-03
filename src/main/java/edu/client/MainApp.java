@@ -1,9 +1,6 @@
 package edu.client;
 
-import edu.client.controller.EditAuthorController;
-import edu.client.controller.EditBookController;
-import edu.client.controller.EditPublisherController;
-import edu.client.controller.MainController;
+import edu.client.controller.*;
 import edu.client.domain.Library;
 import edu.client.domain.LibraryFacade;
 import edu.client.model.Author;
@@ -14,6 +11,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -56,13 +54,20 @@ public class MainApp extends Application {
     /* WINDOWS */
     private void initMainWindow() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/main.fxml"));
-            AnchorPane booksOverview = loader.load();
+            FXMLLoader mainLoader = new FXMLLoader();
+            mainLoader.setLocation(getClass().getResource("view/main.fxml"));
+            AnchorPane booksOverview = mainLoader.load();
 
-            MainController controller = loader.getController();
-            controller.setMainApp(this);
-            controller.setFilteredTableBooks();
+            MainController mainController = mainLoader.getController();
+            mainController.setMainApp(this);
+            mainController.setLibrary(library);
+            mainController.setFilteredTableBooks();
+
+            FXMLLoader searchLoader = new FXMLLoader();
+            searchLoader.setLocation(getClass().getResource("view/searchBox.fxml"));
+            HBox searchPane = searchLoader.load();
+            SearchBoxController searchController = searchLoader.getController();
+            searchController.setMainController(mainController);
 
             Scene mainScene = new Scene(booksOverview);
             primaryStage.setScene(mainScene);
@@ -78,7 +83,7 @@ public class MainApp extends Application {
     public boolean showBookEditDialog(Book tempBookObj) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/bookEditor.fxml"));
+            loader.setLocation(getClass().getResource("view/bookEditor.fxml"));
             AnchorPane bookEditor = loader.load();
 
             Stage editStage = createDialogStage(bookEditor);
@@ -100,7 +105,7 @@ public class MainApp extends Application {
     public boolean showAuthorEditDialog(Author tempAuthorObj) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/authorEditor.fxml"));
+            loader.setLocation(getClass().getResource("view/authorEditor.fxml"));
             AnchorPane authorEditor = loader.load();
 
             Stage editAuthorStage = createDialogStage(authorEditor);
@@ -120,7 +125,7 @@ public class MainApp extends Application {
     public boolean showPublisherEditDialog(Publisher tempPublisherObj) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/publisherEditor.fxml"));
+            loader.setLocation(getClass().getResource("view/publisherEditor.fxml"));
             AnchorPane publisherEditor = loader.load();
 
             Stage editPublisherStage = createDialogStage(publisherEditor);
