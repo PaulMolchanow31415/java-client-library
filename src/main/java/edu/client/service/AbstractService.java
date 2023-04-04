@@ -1,15 +1,15 @@
-package edu.client.domain.manager;
+package edu.client.service;
 
 import edu.client.client.Client;
 import edu.client.model.Entity;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractManager<E extends Entity> {
+public abstract class AbstractService<E extends Entity> {
     protected final ObservableList<E> entitiesData;
     protected final Client<E> entityClient;
 
-    public AbstractManager(ObservableList<E> entitiesData, Client<E> entityClient) {
+    public AbstractService(ObservableList<E> entitiesData, Client<E> entityClient) {
         this.entitiesData = entitiesData;
         this.entityClient = entityClient;
     }

@@ -11,7 +11,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
@@ -52,7 +55,8 @@ public class MainController {
     @FXML
     private Button publisherDeleteButton;
     @FXML
-    private SearchBoxController searchBoxController;
+    @Setter
+    private SearchController searchController;
 
     @FXML
     private void initialize() {
@@ -201,8 +205,8 @@ public class MainController {
         }
 
         if (selectedPublisher != null) {
-            mainApp.getLibrary().getPublisherManager().remove(selectedPublisher);
-            mainApp.getLibrary().getBookManager().removePublisher(selectedPublisher);
+            library.getPublisherManager().remove(selectedPublisher);
+            library.getBookManager().removePublisher(selectedPublisher);
             showBookDetails(selectedBook);
             disablePublisherDetailButtons();
             tableBooks.refresh();
@@ -247,9 +251,9 @@ public class MainController {
 
     public void setFilteredTableBooks() {
         FilteredList<Book> filteredBooksData
-                = new FilteredList<>(mainApp.getLibrary().getBooksData(), predicate -> true);
+                = new FilteredList<>(library.getBooksData(), predicate -> true);
 
-        SortedList<Book> sortedBooksData = searchBoxController.createFilteredBooks(filteredBooksData);
+        SortedList<Book> sortedBooksData = searchController.createFilteredBooks(filteredBooksData);
         sortedBooksData.comparatorProperty().bind(tableBooks.comparatorProperty());
 
         tableBooks.setItems(sortedBooksData);

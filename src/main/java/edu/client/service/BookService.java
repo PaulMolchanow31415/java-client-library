@@ -1,4 +1,4 @@
-package edu.client.domain.manager;
+package edu.client.service;
 
 import edu.client.client.Client;
 import edu.client.model.Author;
@@ -6,8 +6,8 @@ import edu.client.model.Book;
 import edu.client.model.Publisher;
 import javafx.collections.ObservableList;
 
-public class BookManager extends AbstractManager<Book> {
-    public BookManager(ObservableList<Book> booksData, Client<Book> bookClient) {
+public class BookService extends AbstractService<Book> {
+    public BookService(ObservableList<Book> booksData, Client<Book> bookClient) {
         super(booksData, bookClient);
     }
 

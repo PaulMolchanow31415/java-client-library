@@ -5,11 +5,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import lombok.Setter;
 
-public class SearchBoxController {
-    @Setter
-    private MainController mainController;
+public class SearchController {
     @FXML
     private TextField filterBookField;
 

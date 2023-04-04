@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -54,22 +55,20 @@ public class MainApp extends Application {
     /* WINDOWS */
     private void initMainWindow() {
         try {
-            FXMLLoader mainLoader = new FXMLLoader();
-            mainLoader.setLocation(getClass().getResource("view/main.fxml"));
-            AnchorPane booksOverview = mainLoader.load();
-
+            FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("view/main.fxml"));
+            BorderPane rootLayout = mainLoader.load();
             MainController mainController = mainLoader.getController();
+
+            FXMLLoader boxLoader = new FXMLLoader(getClass().getResource("view/searchBox.fxml"));
+            HBox searchBox = boxLoader.load();
+            SearchController searchController = boxLoader.getController();
+
             mainController.setMainApp(this);
             mainController.setLibrary(library);
+            mainController.setSearchController(searchController);
             mainController.setFilteredTableBooks();
 
-            FXMLLoader searchLoader = new FXMLLoader();
-            searchLoader.setLocation(getClass().getResource("view/searchBox.fxml"));
-            HBox searchPane = searchLoader.load();
-            SearchBoxController searchController = searchLoader.getController();
-            searchController.setMainController(mainController);
-
-            Scene mainScene = new Scene(booksOverview);
+            Scene mainScene = new Scene(rootLayout);
             primaryStage.setScene(mainScene);
             primaryStage.initStyle(StageStyle.TRANSPARENT);
 
@@ -82,8 +81,7 @@ public class MainApp extends Application {
 
     public boolean showBookEditDialog(Book tempBookObj) {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("view/bookEditor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/bookEditor.fxml"));
             AnchorPane bookEditor = loader.load();
 
             Stage editStage = createDialogStage(bookEditor);
@@ -104,8 +102,7 @@ public class MainApp extends Application {
     /* MICRO AUTHOR / PUBLISHER DIALOGS */
     public boolean showAuthorEditDialog(Author tempAuthorObj) {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("view/authorEditor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/authorEditor.fxml"));
             AnchorPane authorEditor = loader.load();
 
             Stage editAuthorStage = createDialogStage(authorEditor);
@@ -124,8 +121,7 @@ public class MainApp extends Application {
 
     public boolean showPublisherEditDialog(Publisher tempPublisherObj) {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("view/publisherEditor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/publisherEditor.fxml"));
             AnchorPane publisherEditor = loader.load();
 
             Stage editPublisherStage = createDialogStage(publisherEditor);

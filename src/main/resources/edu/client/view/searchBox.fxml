@@ -7,8 +7,9 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<HBox prefHeight="100.0" prefWidth="Infinity" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="edu.client.controller.SearchBoxController">
+<HBox prefHeight="100.0" prefWidth="Infinity" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.client.controller.SearchController"
+      stylesheets="@../css/MainTheme.css">
     <children>
         <Button mnemonicParsing="false" styleClass="search-btn">
             <graphic>

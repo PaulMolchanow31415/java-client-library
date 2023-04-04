@@ -4,11 +4,9 @@ import edu.client.client.AuthorClient;
 import edu.client.client.BookClient;
 import edu.client.client.Client;
 import edu.client.client.PublisherClient;
-import edu.client.domain.manager.AuthorManager;
-import edu.client.domain.manager.BookManager;
-import edu.client.domain.manager.PublisherManager;
 import edu.client.model.Author;
 import edu.client.model.Book;
+import edu.client.service.*;
 import edu.client.model.Publisher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,9 +18,9 @@ public class LibraryFacade implements Library {
     private static final Client<Book> bookClient = new BookClient();
     private static final Client<Author> authorClient = new AuthorClient();
     private static final Client<Publisher> publisherClient = new PublisherClient();
-    private static final BookManager bookManager = new BookManager(booksData, bookClient);
-    private static final AuthorManager authorManager = new AuthorManager(authorsData, authorClient);
-    private static final PublisherManager publisherManager = new PublisherManager(publishersData, publisherClient);
+    private static final BookService bookManager = new BookService(booksData, bookClient);
+    private static final AuthorService authorManager = new AuthorService(authorsData, authorClient);
+    private static final PublisherService publisherManager = new PublisherService(publishersData, publisherClient);
 
     public LibraryFacade() throws Exception {
         booksData.addAll(bookClient.getAll());
@@ -31,15 +29,15 @@ public class LibraryFacade implements Library {
     }
 
     /* GETTERS */
-    public BookManager getBookManager() {
+    public BookService getBookManager() {
         return bookManager;
     }
 
-    public AuthorManager getAuthorManager() {
+    public AuthorService getAuthorManager() {
         return authorManager;
     }
 
-    public PublisherManager getPublisherManager() {
+    public PublisherService getPublisherManager() {
         return publisherManager;
     }
 
