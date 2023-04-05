@@ -11,10 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Setter;
 import org.apache.commons.lang3.SerializationUtils;
@@ -33,6 +30,8 @@ public class MainController {
     private TableColumn<Book, String> authorInitialsColumn;
     @FXML
     private TableColumn<Book, String> publisherNameColumn;
+    @FXML
+    private TextField filterBookField;
     /* DETAILS */
     @FXML
     private Label titleLabel;
@@ -54,9 +53,7 @@ public class MainController {
     private Button publisherEditButton;
     @FXML
     private Button publisherDeleteButton;
-    @FXML
-    @Setter
-    private SearchController searchController;
+    private final SearchController searchController = new SearchController();
 
     @FXML
     private void initialize() {
@@ -68,6 +65,8 @@ public class MainController {
 
         tableBooks.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showBookDetails(newValue));
+
+        searchController.setFilterBookField(filterBookField);
     }
 
     @FXML
@@ -77,9 +76,9 @@ public class MainController {
 
         if (isSaveClicked) {
             /* set book id and save */
-            library.getPublisherManager().add(tempBook.getPublisher());
-            library.getAuthorManager().add(tempBook.getAuthor());
-            library.getBookManager().add(tempBook);
+            library.getPublisherService().add(tempBook.getPublisher());
+            library.getAuthorService().add(tempBook.getAuthor());
+            library.getBookService().add(tempBook);
             showBookDetails(tempBook);
         }
     }
@@ -93,9 +92,9 @@ public class MainController {
             boolean isSaveClicked = mainApp.showBookEditDialog(newBook);
 
             if (isSaveClicked) {
-                library.getPublisherManager().edit(selectedBook.getPublisher(), newBook.getPublisher());
-                library.getAuthorManager().edit(selectedBook.getAuthor(), newBook.getAuthor());
-                library.getBookManager().edit(selectedBook, newBook);
+                library.getPublisherService().edit(selectedBook.getPublisher(), newBook.getPublisher());
+                library.getAuthorService().edit(selectedBook.getAuthor(), newBook.getAuthor());
+                library.getBookService().edit(selectedBook, newBook);
                 showBookDetails(newBook);
                 enableDetailButtons();
             }
@@ -109,7 +108,7 @@ public class MainController {
         Book selectedBook = tableBooks.getSelectionModel().getSelectedItem();
 
         if (selectedBook != null) {
-            library.getBookManager().remove(selectedBook);
+            library.getBookService().remove(selectedBook);
         } else {
             AlertUtils.showNothingIsSelectedAlert();
         }
@@ -132,8 +131,8 @@ public class MainController {
             boolean isUpdateClicked = mainApp.showAuthorEditDialog(newAuthor);
 
             if (isUpdateClicked) {
-                library.getAuthorManager().edit(bookAuthor, newAuthor);
-                library.getBookManager().editAuthor(bookAuthor, newAuthor);
+                library.getBookService().editAuthor(bookAuthor, newAuthor);
+                library.getAuthorService().edit(bookAuthor, newAuthor);
                 showBookDetails(selectedBook);
                 tableBooks.refresh();
             }
@@ -159,8 +158,8 @@ public class MainController {
             boolean isUpdateClicked = mainApp.showPublisherEditDialog(newPublisher);
 
             if (isUpdateClicked) {
-                library.getPublisherManager().edit(bookPublisher, newPublisher);
-                library.getBookManager().editPublisher(bookPublisher, newPublisher);
+                library.getBookService().editPublisher(bookPublisher, newPublisher);
+                library.getPublisherService().edit(bookPublisher, newPublisher);
                 showBookDetails(selectedBook);
                 tableBooks.refresh();
             }
@@ -182,8 +181,8 @@ public class MainController {
         }
 
         if (selectedAuthor != null) {
-            library.getAuthorManager().remove(selectedAuthor);
-            library.getBookManager().removeAuthor(selectedAuthor);
+            library.getBookService().removeAuthor(selectedAuthor);
+            library.getAuthorService().remove(selectedAuthor);
             showBookDetails(selectedBook);
             disableAuthorDetailButtons();
             tableBooks.refresh();
@@ -205,8 +204,8 @@ public class MainController {
         }
 
         if (selectedPublisher != null) {
-            library.getPublisherManager().remove(selectedPublisher);
-            library.getBookManager().removePublisher(selectedPublisher);
+            library.getBookService().removePublisher(selectedPublisher);
+            library.getPublisherService().remove(selectedPublisher);
             showBookDetails(selectedBook);
             disablePublisherDetailButtons();
             tableBooks.refresh();
@@ -221,15 +220,24 @@ public class MainController {
     }
 
     private void showBookDetails(Book book) {
-        titleLabel.setText(book.getTitle());
-        authorLabel.setText(book.getAuthor().getName()
-                + " " + book.getAuthor().getSurname()
-                + " " + book.getAuthor().getPatronymic());
-        publisherLabel.setText(book.getPublisher().getName()
-                + " " + book.getPublisher().getCity());
-        yearPubLabel.setText(book.getYearPub());
-        sectionLabel.setText(book.getSection());
-        originLabel.setText(book.getOrigin());
+        if (book != null) {
+            titleLabel.setText(book.getTitle());
+            authorLabel.setText(book.getAuthor().getName()
+                    + " " + book.getAuthor().getSurname()
+                    + " " + book.getAuthor().getPatronymic());
+            publisherLabel.setText(book.getPublisher().getName()
+                    + " " + book.getPublisher().getCity());
+            yearPubLabel.setText(book.getYearPub());
+            sectionLabel.setText(book.getSection());
+            originLabel.setText(book.getOrigin());
+        }
+    }
+
+    public void setFilteredTableBooks() {
+        FilteredList<Book> filteredBooksData = new FilteredList<>(library.getBooksData(), predicate -> true);
+        SortedList<Book> sortedBooksData = searchController.createSortedBooks(filteredBooksData);
+        sortedBooksData.comparatorProperty().bind(tableBooks.comparatorProperty());
+        tableBooks.setItems(sortedBooksData);
     }
 
     private void disableAuthorDetailButtons() {
@@ -247,15 +255,5 @@ public class MainController {
         authorEditButton.setDisable(false);
         publisherDeleteButton.setDisable(false);
         publisherEditButton.setDisable(false);
-    }
-
-    public void setFilteredTableBooks() {
-        FilteredList<Book> filteredBooksData
-                = new FilteredList<>(library.getBooksData(), predicate -> true);
-
-        SortedList<Book> sortedBooksData = searchController.createFilteredBooks(filteredBooksData);
-        sortedBooksData.comparatorProperty().bind(tableBooks.comparatorProperty());
-
-        tableBooks.setItems(sortedBooksData);
     }
 }

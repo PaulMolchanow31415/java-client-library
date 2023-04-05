@@ -1,6 +1,9 @@
 package edu.client;
 
-import edu.client.controller.*;
+import edu.client.controller.EditAuthorController;
+import edu.client.controller.EditBookController;
+import edu.client.controller.EditPublisherController;
+import edu.client.controller.MainController;
 import edu.client.domain.Library;
 import edu.client.domain.LibraryFacade;
 import edu.client.model.Author;
@@ -11,8 +14,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -55,20 +56,15 @@ public class MainApp extends Application {
     /* WINDOWS */
     private void initMainWindow() {
         try {
-            FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("view/main.fxml"));
-            BorderPane rootLayout = mainLoader.load();
-            MainController mainController = mainLoader.getController();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/main.fxml"));
+            AnchorPane layout = loader.load();
+            MainController controller = loader.getController();
 
-            FXMLLoader boxLoader = new FXMLLoader(getClass().getResource("view/searchBox.fxml"));
-            HBox searchBox = boxLoader.load();
-            SearchController searchController = boxLoader.getController();
+            controller.setMainApp(this);
+            controller.setLibrary(library);
+            controller.setFilteredTableBooks();
 
-            mainController.setMainApp(this);
-            mainController.setLibrary(library);
-            mainController.setSearchController(searchController);
-            mainController.setFilteredTableBooks();
-
-            Scene mainScene = new Scene(rootLayout);
+            Scene mainScene = new Scene(layout);
             primaryStage.setScene(mainScene);
             primaryStage.initStyle(StageStyle.TRANSPARENT);
 

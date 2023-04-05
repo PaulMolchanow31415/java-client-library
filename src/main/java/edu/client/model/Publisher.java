@@ -26,7 +26,7 @@ public class Publisher implements Serializable, Entity {
     }
 
     public String getLabeling() {
-        if (name != null && !name.isBlank() && !name.isEmpty()) {
+        if (name != null && !name.isEmpty() && !name.isBlank()) {
             return name;
         }
         return "Пусто";

@@ -29,15 +29,15 @@ public class LibraryFacade implements Library {
     }
 
     /* GETTERS */
-    public BookService getBookManager() {
+    public BookService getBookService() {
         return bookManager;
     }
 
-    public AuthorService getAuthorManager() {
+    public AuthorService getAuthorService() {
         return authorManager;
     }
 
-    public PublisherService getPublisherManager() {
+    public PublisherService getPublisherService() {
         return publisherManager;
     }
 

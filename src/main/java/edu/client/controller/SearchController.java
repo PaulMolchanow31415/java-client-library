@@ -3,14 +3,14 @@ package edu.client.controller;
 import edu.client.model.Book;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import lombok.Setter;
 
 public class SearchController {
-    @FXML
+    @Setter
     private TextField filterBookField;
 
-    public SortedList<Book> createFilteredBooks(FilteredList<Book> filteredBooksData) {
+    public SortedList<Book> createSortedBooks(FilteredList<Book> filteredBooksData) {
         filterBookField.textProperty().addListener((observable, oldValue, newValue) ->
                 filteredBooksData.setPredicate(book -> {
                     if (newValue == null || newValue.isEmpty()) return true;

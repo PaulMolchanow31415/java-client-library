@@ -39,8 +39,6 @@ public class EditPublisherController {
         editPublisherStage.close();
     }
 
-    /* edit controller METHODS */
-
     public void setFields(Publisher publisherObj) {
         this.currentPublisher = publisherObj;
 

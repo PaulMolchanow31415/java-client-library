@@ -7,11 +7,11 @@ import edu.client.model.Publisher;
 import javafx.collections.ObservableList;
 
 public interface Library {
-    BookService getBookManager();
+    BookService getBookService();
 
-    AuthorService getAuthorManager();
+    AuthorService getAuthorService();
 
-    PublisherService getPublisherManager();
+    PublisherService getPublisherService();
 
     ObservableList<Book> getBooksData();
 
